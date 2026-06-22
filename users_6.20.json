@@ -1,0 +1,184 @@
+{
+  "users": [
+    {
+      "username": "jason.chan",
+      "email": "jason.chan@gmail.com",
+      "first_name": "Jason",
+      "last_name": "Chan",
+      "password": "Pass1234!",
+      "is_active": true,
+      "is_staff": false,
+      "is_superuser": false,
+      "profile": {
+        "phone": "91234567",
+        "address": "Flat 12A, 8/F, Tower 1, Harbour Centre, 25 Harbour Road, Wan Chai, Hong Kong",
+        "points": 850
+      }
+    },
+    {
+      "username": "emily.wong",
+      "email": "emily.wong@yahoo.com.hk",
+      "first_name": "Emily",
+      "last_name": "Wong",
+      "password": "Pass1234!",
+      "is_active": true,
+      "is_staff": false,
+      "is_superuser": false,
+      "profile": {
+        "phone": "62345678",
+        "address": "Unit 5, 15/F, Block B, Laguna City, 8 Laguna Street, Lam Tin, Kowloon",
+        "points": 1200
+      }
+    },
+    {
+      "username": "ryan.lee",
+      "email": "ryan.lee@outlook.com",
+      "first_name": "Ryan",
+      "last_name": "Lee",
+      "password": "Pass1234!",
+      "is_active": true,
+      "is_staff": false,
+      "is_superuser": false,
+      "profile": {
+        "phone": "55443322",
+        "address": "Room 801, Grand Millennium Plaza, 181 Queen's Road Central, Central, Hong Kong",
+        "points": 320
+      }
+    },
+    {
+      "username": "sophie.lam",
+      "email": "sophie.lam@gmail.com",
+      "first_name": "Sophie",
+      "last_name": "Lam",
+      "password": "Pass1234!",
+      "is_active": true,
+      "is_staff": false,
+      "is_superuser": false,
+      "profile": {
+        "phone": "98765432",
+        "address": "Flat C, 22/F, The Zenith, 258 Queen's Road East, Wan Chai, Hong Kong",
+        "points": 5600
+      }
+    },
+    {
+      "username": "marcus.cheung",
+      "email": "marcus.cheung@hotmail.com",
+      "first_name": "Marcus",
+      "last_name": "Cheung",
+      "password": "Pass1234!",
+      "is_active": true,
+      "is_staff": false,
+      "is_superuser": false,
+      "profile": {
+        "phone": "67890123",
+        "address": "Flat 3, 6/F, Block 2, City One Shatin, Sha Tin, New Territories",
+        "points": 0
+      }
+    },
+    {
+      "username": "fiona.ng",
+      "email": "fiona.ng@gmail.com",
+      "first_name": "Fiona",
+      "last_name": "Ng",
+      "password": "Pass1234!",
+      "is_active": true,
+      "is_staff": false,
+      "is_superuser": false,
+      "profile": {
+        "phone": "51112233",
+        "address": "Flat 18, 12/F, Tsim Sha Tsui Centre, 66 Mody Road, Tsim Sha Tsui, Kowloon",
+        "points": 2100
+      }
+    },
+    {
+      "username": "daniel.ho",
+      "email": "daniel.ho@yahoo.com",
+      "first_name": "Daniel",
+      "last_name": "Ho",
+      "password": "Pass1234!",
+      "is_active": true,
+      "is_staff": false,
+      "is_superuser": false,
+      "profile": {
+        "phone": "96543210",
+        "address": "House 12, Palm Springs, Yuen Long, New Territories",
+        "points": 7800
+      }
+    },
+    {
+      "username": "natalie.tam",
+      "email": "natalie.tam@outlook.com",
+      "first_name": "Natalie",
+      "last_name": "Tam",
+      "password": "Pass1234!",
+      "is_active": true,
+      "is_staff": false,
+      "is_superuser": false,
+      "profile": {
+        "phone": "61239876",
+        "address": "Flat 7, 3/F, Mei Foo Sun Chuen, Stage 4, Lai Chi Kok, Kowloon",
+        "points": 450
+      }
+    },
+    {
+      "username": "kevin.yip",
+      "email": "kevin.yip@gmail.com",
+      "first_name": "Kevin",
+      "last_name": "Yip",
+      "password": "Pass1234!",
+      "is_active": true,
+      "is_staff": false,
+      "is_superuser": false,
+      "profile": {
+        "phone": "23456789",
+        "address": "Office 1205, 12/F, AIA Tower, 183 Electric Road, North Point, Hong Kong",
+        "points": 15000
+      }
+    },
+    {
+      "username": "angela.mak",
+      "email": "angela.mak@hotmail.com",
+      "first_name": "Angela",
+      "last_name": "Mak",
+      "password": "Pass1234!",
+      "is_active": true,
+      "is_staff": false,
+      "is_superuser": false,
+      "profile": {
+        "phone": "34567890",
+        "address": "Flat 2B, G/F, Village House, 88 Tai Po Road, Tai Po, New Territories",
+        "points": 980
+      }
+    },
+    {
+      "username": "brandon.chiu",
+      "email": "brandon.chiu@gmail.com",
+      "first_name": "Brandon",
+      "last_name": "Chiu",
+      "password": "Pass1234!",
+      "is_active": true,
+      "is_staff": false,
+      "is_superuser": false,
+      "profile": {
+        "phone": "91238888",
+        "address": "Flat 25, 10/F, The Wings, 9 Tong Yin Street, Tseung Kwan O, New Territories",
+        "points": 3400
+      }
+    },
+    {
+      "username": "grace.lau",
+      "email": "grace.lau@yahoo.com.hk",
+      "first_name": "Grace",
+      "last_name": "Lau",
+      "password": "Pass1234!",
+      "is_active": true,
+      "is_staff": false,
+      "is_superuser": false,
+      "profile": {
+        "phone": "69998888",
+        "address": "Flat 601, 6/F, Island Resort, 28 Siu Sai Wan Road, Chai Wan, Hong Kong",
+        "points": 6200
+      }
+    }
+  ]
+}

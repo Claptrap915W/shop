@@ -1,0 +1,1094 @@
+{
+  "meta": {
+    "exported_at": "2026-06-21",
+    "total_orders": 30
+  },
+  "orders": [
+    {
+      "order_no": "ORD-20260601-100000000001",
+      "username": "jason.chan",
+      "full_name": "Jason Chan",
+      "email": "jason.chan@gmail.com",
+      "phone": "91234567",
+      "address": "Flat 12A, 8/F, Tower 1, Harbour Centre, 25 Harbour Road, Wan Chai, Hong Kong",
+      "status": "paid",
+      "created_at": "2026-06-01T02:00:00+00:00",
+      "total": "59.80",
+      "items": [
+        {
+          "sku": "crew-neck-t-shirt-09-L",
+          "quantity": 2,
+          "price": "29.90",
+          "subtotal": "59.80",
+          "product_name": "Crew Neck T-Shirt",
+          "product_slug": "crew-neck-t-shirt",
+          "color_name": "09 BLACK",
+          "size": "L",
+          "image_path": "products/2026/06/10/crew-neck-t-shirt_TeMYsLY.png",
+          "image_alt": "Crew Neck T-Shirt-09 BLACK"
+        }
+      ],
+      "payment": {
+        "method": "credit_card",
+        "status": "success",
+        "amount": "59.80",
+        "card_last_four": "4242",
+        "transaction_id": "TXN-SEED-000001",
+        "paid_at": "2026-06-01T02:01:00+00:00"
+      }
+    },
+    {
+      "order_no": "ORD-20260601-100000000002",
+      "username": "emily.wong",
+      "full_name": "Emily Wong",
+      "email": "emily.wong@yahoo.com.hk",
+      "phone": "62345678",
+      "address": "Unit 5, 15/F, Block B, Laguna City, 8 Laguna Street, Lam Tin, Kowloon",
+      "status": "paid",
+      "created_at": "2026-06-01T06:00:00+00:00",
+      "total": "44.75",
+      "items": [
+        {
+          "sku": "v-neck-t-shirt-32-XL",
+          "quantity": 1,
+          "price": "14.85",
+          "subtotal": "14.85",
+          "product_name": "V-Neck T-Shirt",
+          "product_slug": "v-neck-t-shirt",
+          "color_name": "32 BEIGE",
+          "size": "XL",
+          "image_path": "products/2026/06/10/usgoods_32_487302_3x4_SObZlFT.avif",
+          "image_alt": "V-Neck T-Shirt-32 BEIGE"
+        },
+        {
+          "sku": "pointelle-sweater-32-XS",
+          "quantity": 1,
+          "price": "29.90",
+          "subtotal": "29.90",
+          "product_name": "Pointelle Sweater",
+          "product_slug": "pointelle-sweater",
+          "color_name": "32 BEIGE",
+          "size": "XS",
+          "image_path": "products/2026/06/10/usgoods_32_485574_3x4_RTUmnUt.avif",
+          "image_alt": "Pointelle Sweater-32 BEIGE"
+        }
+      ],
+      "payment": {
+        "method": "credit_card",
+        "status": "success",
+        "amount": "44.75",
+        "card_last_four": "4242",
+        "transaction_id": "TXN-SEED-000002",
+        "paid_at": "2026-06-01T06:01:00+00:00"
+      }
+    },
+    {
+      "order_no": "ORD-20260602-100000000003",
+      "username": "ryan.lee",
+      "full_name": "Ryan Lee",
+      "email": "ryan.lee@outlook.com",
+      "phone": "55443322",
+      "address": "Room 801, Grand Millennium Plaza, 181 Queen's Road Central, Central, Hong Kong",
+      "status": "paid",
+      "created_at": "2026-06-02T01:00:00+00:00",
+      "total": "49.90",
+      "items": [
+        {
+          "sku": "protection-cardigan-00-M",
+          "quantity": 1,
+          "price": "49.90",
+          "subtotal": "49.90",
+          "product_name": "Protection Cardigan",
+          "product_slug": "protection-cardigan",
+          "color_name": "00 WHITE",
+          "size": "M",
+          "image_path": "products/2026/06/10/usgoods_01_484505_3x4_8XZ6Hz4.avif",
+          "image_alt": "Protection Cardigan-00 WHITE"
+        }
+      ],
+      "payment": {
+        "method": "credit_card",
+        "status": "success",
+        "amount": "49.90",
+        "card_last_four": "4242",
+        "transaction_id": "TXN-SEED-000003",
+        "paid_at": "2026-06-02T01:01:00+00:00"
+      }
+    },
+    {
+      "order_no": "ORD-20260602-100000000004",
+      "username": "sophie.lam",
+      "full_name": "Sophie Lam",
+      "email": "sophie.lam@gmail.com",
+      "phone": "98765432",
+      "address": "Flat C, 22/F, The Zenith, 258 Queen's Road East, Wan Chai, Hong Kong",
+      "status": "paid",
+      "created_at": "2026-06-02T08:00:00+00:00",
+      "total": "49.86",
+      "items": [
+        {
+          "sku": "sweat-oversized-pull-69-3XL",
+          "quantity": 1,
+          "price": "49.86",
+          "subtotal": "49.86",
+          "product_name": "Sweat Oversized Pullover Hoodie",
+          "product_slug": "sweat-oversized-pullover-hoodie",
+          "color_name": "69 NAVY",
+          "size": "3XL",
+          "image_path": "products/2026/06/10/Sweat_Oversized_Pullover_Hoodie_JV7VMYt.png",
+          "image_alt": "Sweat Oversized Pullover Hoodie-69 NAVY"
+        }
+      ],
+      "payment": {
+        "method": "credit_card",
+        "status": "success",
+        "amount": "49.86",
+        "card_last_four": "4242",
+        "transaction_id": "TXN-SEED-000004",
+        "paid_at": "2026-06-02T08:01:00+00:00"
+      }
+    },
+    {
+      "order_no": "ORD-20260603-100000000005",
+      "username": "marcus.cheung",
+      "full_name": "Marcus Cheung",
+      "email": "marcus.cheung@hotmail.com",
+      "phone": "67890123",
+      "address": "Flat 3, 6/F, Block 2, City One Shatin, Sha Tin, New Territories",
+      "status": "paid",
+      "created_at": "2026-06-03T03:00:00+00:00",
+      "total": "79.80",
+      "items": [
+        {
+          "sku": "polo-short-sleeve-sw-69-M",
+          "quantity": 2,
+          "price": "39.90",
+          "subtotal": "79.80",
+          "product_name": "Polo Short Sleeve Sweater",
+          "product_slug": "polo-short-sleeve-sweater",
+          "color_name": "69 NAVY",
+          "size": "M",
+          "image_path": "products/2026/06/10/usgoods_69_485224_3x4_IXYY1di.avif",
+          "image_alt": "Polo Short Sleeve Sweater-69 NAVY"
+        }
+      ],
+      "payment": {
+        "method": "credit_card",
+        "status": "success",
+        "amount": "79.80",
+        "card_last_four": "4242",
+        "transaction_id": "TXN-SEED-000005",
+        "paid_at": "2026-06-03T03:01:00+00:00"
+      }
+    },
+    {
+      "order_no": "ORD-20260603-100000000006",
+      "username": "fiona.ng",
+      "full_name": "Fiona Ng",
+      "email": "fiona.ng@gmail.com",
+      "phone": "51112233",
+      "address": "Flat 18, 12/F, Tsim Sha Tsui Centre, 66 Mody Road, Tsim Sha Tsui, Kowloon",
+      "status": "paid",
+      "created_at": "2026-06-03T11:00:00+00:00",
+      "total": "49.90",
+      "items": [
+        {
+          "sku": "smooth-cotton-sweate-03-XS",
+          "quantity": 1,
+          "price": "49.90",
+          "subtotal": "49.90",
+          "product_name": "Smooth Cotton Sweater",
+          "product_slug": "smooth-cotton-sweater",
+          "color_name": "03 GRAY",
+          "size": "XS",
+          "image_path": "products/2026/06/10/Smooth_Cotton_Sweater_4qh1sa2.png",
+          "image_alt": "Smooth Cotton Sweater-03 GRAY"
+        }
+      ],
+      "payment": {
+        "method": "credit_card",
+        "status": "success",
+        "amount": "49.90",
+        "card_last_four": "4242",
+        "transaction_id": "TXN-SEED-000006",
+        "paid_at": "2026-06-03T11:01:00+00:00"
+      }
+    },
+    {
+      "order_no": "ORD-20260604-100000000007",
+      "username": "daniel.ho",
+      "full_name": "Daniel Ho",
+      "email": "daniel.ho@yahoo.com",
+      "phone": "96543210",
+      "address": "House 12, Palm Springs, Yuen Long, New Territories",
+      "status": "paid",
+      "created_at": "2026-06-04T00:00:00+00:00",
+      "total": "59.60",
+      "items": [
+        {
+          "sku": "crew-neck-t-shirt-09-L",
+          "quantity": 1,
+          "price": "29.90",
+          "subtotal": "29.90",
+          "product_name": "Crew Neck T-Shirt",
+          "product_slug": "crew-neck-t-shirt",
+          "color_name": "09 BLACK",
+          "size": "L",
+          "image_path": "products/2026/06/10/crew-neck-t-shirt_TeMYsLY.png",
+          "image_alt": "Crew Neck T-Shirt-09 BLACK"
+        },
+        {
+          "sku": "v-neck-t-shirt-32-XL",
+          "quantity": 2,
+          "price": "14.85",
+          "subtotal": "29.70",
+          "product_name": "V-Neck T-Shirt",
+          "product_slug": "v-neck-t-shirt",
+          "color_name": "32 BEIGE",
+          "size": "XL",
+          "image_path": "products/2026/06/10/usgoods_32_487302_3x4_SObZlFT.avif",
+          "image_alt": "V-Neck T-Shirt-32 BEIGE"
+        }
+      ],
+      "payment": {
+        "method": "credit_card",
+        "status": "success",
+        "amount": "59.60",
+        "card_last_four": "4242",
+        "transaction_id": "TXN-SEED-000007",
+        "paid_at": "2026-06-04T00:01:00+00:00"
+      }
+    },
+    {
+      "order_no": "ORD-20260604-100000000008",
+      "username": "natalie.tam",
+      "full_name": "Natalie Tam",
+      "email": "natalie.tam@outlook.com",
+      "phone": "61239876",
+      "address": "Flat 7, 3/F, Mei Foo Sun Chuen, Stage 4, Lai Chi Kok, Kowloon",
+      "status": "paid",
+      "created_at": "2026-06-04T05:00:00+00:00",
+      "total": "89.70",
+      "items": [
+        {
+          "sku": "pointelle-sweater-32-XS",
+          "quantity": 3,
+          "price": "29.90",
+          "subtotal": "89.70",
+          "product_name": "Pointelle Sweater",
+          "product_slug": "pointelle-sweater",
+          "color_name": "32 BEIGE",
+          "size": "XS",
+          "image_path": "products/2026/06/10/usgoods_32_485574_3x4_RTUmnUt.avif",
+          "image_alt": "Pointelle Sweater-32 BEIGE"
+        }
+      ],
+      "payment": {
+        "method": "credit_card",
+        "status": "success",
+        "amount": "89.70",
+        "card_last_four": "4242",
+        "transaction_id": "TXN-SEED-000008",
+        "paid_at": "2026-06-04T05:01:00+00:00"
+      }
+    },
+    {
+      "order_no": "ORD-20260605-100000000009",
+      "username": "kevin.yip",
+      "full_name": "Kevin Yip",
+      "email": "kevin.yip@gmail.com",
+      "phone": "23456789",
+      "address": "Office 1205, 12/F, AIA Tower, 183 Electric Road, North Point, Hong Kong",
+      "status": "paid",
+      "created_at": "2026-06-05T02:00:00+00:00",
+      "total": "89.80",
+      "items": [
+        {
+          "sku": "protection-cardigan-00-M",
+          "quantity": 1,
+          "price": "49.90",
+          "subtotal": "49.90",
+          "product_name": "Protection Cardigan",
+          "product_slug": "protection-cardigan",
+          "color_name": "00 WHITE",
+          "size": "M",
+          "image_path": "products/2026/06/10/usgoods_01_484505_3x4_8XZ6Hz4.avif",
+          "image_alt": "Protection Cardigan-00 WHITE"
+        },
+        {
+          "sku": "polo-short-sleeve-sw-69-M",
+          "quantity": 1,
+          "price": "39.90",
+          "subtotal": "39.90",
+          "product_name": "Polo Short Sleeve Sweater",
+          "product_slug": "polo-short-sleeve-sweater",
+          "color_name": "69 NAVY",
+          "size": "M",
+          "image_path": "products/2026/06/10/usgoods_69_485224_3x4_IXYY1di.avif",
+          "image_alt": "Polo Short Sleeve Sweater-69 NAVY"
+        }
+      ],
+      "payment": {
+        "method": "credit_card",
+        "status": "success",
+        "amount": "89.80",
+        "card_last_four": "4242",
+        "transaction_id": "TXN-SEED-000009",
+        "paid_at": "2026-06-05T02:01:00+00:00"
+      }
+    },
+    {
+      "order_no": "ORD-20260605-100000000010",
+      "username": "angela.mak",
+      "full_name": "Angela Mak",
+      "email": "angela.mak@hotmail.com",
+      "phone": "34567890",
+      "address": "Flat 2B, G/F, Village House, 88 Tai Po Road, Tai Po, New Territories",
+      "status": "paid",
+      "created_at": "2026-06-05T07:00:00+00:00",
+      "total": "14.85",
+      "items": [
+        {
+          "sku": "v-neck-t-shirt-32-XL",
+          "quantity": 1,
+          "price": "14.85",
+          "subtotal": "14.85",
+          "product_name": "V-Neck T-Shirt",
+          "product_slug": "v-neck-t-shirt",
+          "color_name": "32 BEIGE",
+          "size": "XL",
+          "image_path": "products/2026/06/10/usgoods_32_487302_3x4_SObZlFT.avif",
+          "image_alt": "V-Neck T-Shirt-32 BEIGE"
+        }
+      ],
+      "payment": {
+        "method": "credit_card",
+        "status": "success",
+        "amount": "14.85",
+        "card_last_four": "4242",
+        "transaction_id": "TXN-SEED-000010",
+        "paid_at": "2026-06-05T07:01:00+00:00"
+      }
+    },
+    {
+      "order_no": "ORD-20260606-100000000011",
+      "username": "brandon.chiu",
+      "full_name": "Brandon Chiu",
+      "email": "brandon.chiu@gmail.com",
+      "phone": "91238888",
+      "address": "Flat 25, 10/F, The Wings, 9 Tong Yin Street, Tseung Kwan O, New Territories",
+      "status": "paid",
+      "created_at": "2026-06-06T04:00:00+00:00",
+      "total": "99.72",
+      "items": [
+        {
+          "sku": "sweat-oversized-pull-69-3XL",
+          "quantity": 2,
+          "price": "49.86",
+          "subtotal": "99.72",
+          "product_name": "Sweat Oversized Pullover Hoodie",
+          "product_slug": "sweat-oversized-pullover-hoodie",
+          "color_name": "69 NAVY",
+          "size": "3XL",
+          "image_path": "products/2026/06/10/Sweat_Oversized_Pullover_Hoodie_JV7VMYt.png",
+          "image_alt": "Sweat Oversized Pullover Hoodie-69 NAVY"
+        }
+      ],
+      "payment": {
+        "method": "credit_card",
+        "status": "success",
+        "amount": "99.72",
+        "card_last_four": "4242",
+        "transaction_id": "TXN-SEED-000011",
+        "paid_at": "2026-06-06T04:01:00+00:00"
+      }
+    },
+    {
+      "order_no": "ORD-20260606-100000000012",
+      "username": "grace.lau",
+      "full_name": "Grace Lau",
+      "email": "grace.lau@yahoo.com.hk",
+      "phone": "69998888",
+      "address": "Flat 601, 6/F, Island Resort, 28 Siu Sai Wan Road, Chai Wan, Hong Kong",
+      "status": "paid",
+      "created_at": "2026-06-06T10:00:00+00:00",
+      "total": "79.80",
+      "items": [
+        {
+          "sku": "smooth-cotton-sweate-03-XS",
+          "quantity": 1,
+          "price": "49.90",
+          "subtotal": "49.90",
+          "product_name": "Smooth Cotton Sweater",
+          "product_slug": "smooth-cotton-sweater",
+          "color_name": "03 GRAY",
+          "size": "XS",
+          "image_path": "products/2026/06/10/Smooth_Cotton_Sweater_4qh1sa2.png",
+          "image_alt": "Smooth Cotton Sweater-03 GRAY"
+        },
+        {
+          "sku": "crew-neck-t-shirt-09-L",
+          "quantity": 1,
+          "price": "29.90",
+          "subtotal": "29.90",
+          "product_name": "Crew Neck T-Shirt",
+          "product_slug": "crew-neck-t-shirt",
+          "color_name": "09 BLACK",
+          "size": "L",
+          "image_path": "products/2026/06/10/crew-neck-t-shirt_TeMYsLY.png",
+          "image_alt": "Crew Neck T-Shirt-09 BLACK"
+        }
+      ],
+      "payment": {
+        "method": "credit_card",
+        "status": "success",
+        "amount": "79.80",
+        "card_last_four": "4242",
+        "transaction_id": "TXN-SEED-000012",
+        "paid_at": "2026-06-06T10:01:00+00:00"
+      }
+    },
+    {
+      "order_no": "ORD-20260607-100000000013",
+      "username": "jason.chan",
+      "full_name": "Jason Chan",
+      "email": "jason.chan@gmail.com",
+      "phone": "91234567",
+      "address": "Flat 12A, 8/F, Tower 1, Harbour Centre, 25 Harbour Road, Wan Chai, Hong Kong",
+      "status": "paid",
+      "created_at": "2026-06-07T01:00:00+00:00",
+      "total": "39.90",
+      "items": [
+        {
+          "sku": "polo-short-sleeve-sw-69-M",
+          "quantity": 1,
+          "price": "39.90",
+          "subtotal": "39.90",
+          "product_name": "Polo Short Sleeve Sweater",
+          "product_slug": "polo-short-sleeve-sweater",
+          "color_name": "69 NAVY",
+          "size": "M",
+          "image_path": "products/2026/06/10/usgoods_69_485224_3x4_IXYY1di.avif",
+          "image_alt": "Polo Short Sleeve Sweater-69 NAVY"
+        }
+      ],
+      "payment": {
+        "method": "credit_card",
+        "status": "success",
+        "amount": "39.90",
+        "card_last_four": "4242",
+        "transaction_id": "TXN-SEED-000013",
+        "paid_at": "2026-06-07T01:01:00+00:00"
+      }
+    },
+    {
+      "order_no": "ORD-20260607-100000000014",
+      "username": "emily.wong",
+      "full_name": "Emily Wong",
+      "email": "emily.wong@yahoo.com.hk",
+      "phone": "62345678",
+      "address": "Unit 5, 15/F, Block B, Laguna City, 8 Laguna Street, Lam Tin, Kowloon",
+      "status": "paid",
+      "created_at": "2026-06-07T06:00:00+00:00",
+      "total": "49.90",
+      "items": [
+        {
+          "sku": "protection-cardigan-00-M",
+          "quantity": 1,
+          "price": "49.90",
+          "subtotal": "49.90",
+          "product_name": "Protection Cardigan",
+          "product_slug": "protection-cardigan",
+          "color_name": "00 WHITE",
+          "size": "M",
+          "image_path": "products/2026/06/10/usgoods_01_484505_3x4_8XZ6Hz4.avif",
+          "image_alt": "Protection Cardigan-00 WHITE"
+        }
+      ],
+      "payment": {
+        "method": "credit_card",
+        "status": "success",
+        "amount": "49.90",
+        "card_last_four": "4242",
+        "transaction_id": "TXN-SEED-000014",
+        "paid_at": "2026-06-07T06:01:00+00:00"
+      }
+    },
+    {
+      "order_no": "ORD-20260608-100000000015",
+      "username": "ryan.lee",
+      "full_name": "Ryan Lee",
+      "email": "ryan.lee@outlook.com",
+      "phone": "55443322",
+      "address": "Room 801, Grand Millennium Plaza, 181 Queen's Road Central, Central, Hong Kong",
+      "status": "paid",
+      "created_at": "2026-06-08T03:00:00+00:00",
+      "total": "44.75",
+      "items": [
+        {
+          "sku": "pointelle-sweater-32-XS",
+          "quantity": 1,
+          "price": "29.90",
+          "subtotal": "29.90",
+          "product_name": "Pointelle Sweater",
+          "product_slug": "pointelle-sweater",
+          "color_name": "32 BEIGE",
+          "size": "XS",
+          "image_path": "products/2026/06/10/usgoods_32_485574_3x4_RTUmnUt.avif",
+          "image_alt": "Pointelle Sweater-32 BEIGE"
+        },
+        {
+          "sku": "v-neck-t-shirt-32-XL",
+          "quantity": 1,
+          "price": "14.85",
+          "subtotal": "14.85",
+          "product_name": "V-Neck T-Shirt",
+          "product_slug": "v-neck-t-shirt",
+          "color_name": "32 BEIGE",
+          "size": "XL",
+          "image_path": "products/2026/06/10/usgoods_32_487302_3x4_SObZlFT.avif",
+          "image_alt": "V-Neck T-Shirt-32 BEIGE"
+        }
+      ],
+      "payment": {
+        "method": "credit_card",
+        "status": "success",
+        "amount": "44.75",
+        "card_last_four": "4242",
+        "transaction_id": "TXN-SEED-000015",
+        "paid_at": "2026-06-08T03:01:00+00:00"
+      }
+    },
+    {
+      "order_no": "ORD-20260608-100000000016",
+      "username": "sophie.lam",
+      "full_name": "Sophie Lam",
+      "email": "sophie.lam@gmail.com",
+      "phone": "98765432",
+      "address": "Flat C, 22/F, The Zenith, 258 Queen's Road East, Wan Chai, Hong Kong",
+      "status": "paid",
+      "created_at": "2026-06-08T09:00:00+00:00",
+      "total": "59.80",
+      "items": [
+        {
+          "sku": "crew-neck-t-shirt-09-L",
+          "quantity": 2,
+          "price": "29.90",
+          "subtotal": "59.80",
+          "product_name": "Crew Neck T-Shirt",
+          "product_slug": "crew-neck-t-shirt",
+          "color_name": "09 BLACK",
+          "size": "L",
+          "image_path": "products/2026/06/10/crew-neck-t-shirt_TeMYsLY.png",
+          "image_alt": "Crew Neck T-Shirt-09 BLACK"
+        }
+      ],
+      "payment": {
+        "method": "credit_card",
+        "status": "success",
+        "amount": "59.80",
+        "card_last_four": "4242",
+        "transaction_id": "TXN-SEED-000016",
+        "paid_at": "2026-06-08T09:01:00+00:00"
+      }
+    },
+    {
+      "order_no": "ORD-20260609-100000000017",
+      "username": "marcus.cheung",
+      "full_name": "Marcus Cheung",
+      "email": "marcus.cheung@hotmail.com",
+      "phone": "67890123",
+      "address": "Flat 3, 6/F, Block 2, City One Shatin, Sha Tin, New Territories",
+      "status": "paid",
+      "created_at": "2026-06-09T02:00:00+00:00",
+      "total": "44.55",
+      "items": [
+        {
+          "sku": "v-neck-t-shirt-32-XL",
+          "quantity": 3,
+          "price": "14.85",
+          "subtotal": "44.55",
+          "product_name": "V-Neck T-Shirt",
+          "product_slug": "v-neck-t-shirt",
+          "color_name": "32 BEIGE",
+          "size": "XL",
+          "image_path": "products/2026/06/10/usgoods_32_487302_3x4_SObZlFT.avif",
+          "image_alt": "V-Neck T-Shirt-32 BEIGE"
+        }
+      ],
+      "payment": {
+        "method": "credit_card",
+        "status": "success",
+        "amount": "44.55",
+        "card_last_four": "4242",
+        "transaction_id": "TXN-SEED-000017",
+        "paid_at": "2026-06-09T02:01:00+00:00"
+      }
+    },
+    {
+      "order_no": "ORD-20260610-100000000018",
+      "username": "fiona.ng",
+      "full_name": "Fiona Ng",
+      "email": "fiona.ng@gmail.com",
+      "phone": "51112233",
+      "address": "Flat 18, 12/F, Tsim Sha Tsui Centre, 66 Mody Road, Tsim Sha Tsui, Kowloon",
+      "status": "paid",
+      "created_at": "2026-06-10T00:00:00+00:00",
+      "total": "49.86",
+      "items": [
+        {
+          "sku": "sweat-oversized-pull-69-3XL",
+          "quantity": 1,
+          "price": "49.86",
+          "subtotal": "49.86",
+          "product_name": "Sweat Oversized Pullover Hoodie",
+          "product_slug": "sweat-oversized-pullover-hoodie",
+          "color_name": "69 NAVY",
+          "size": "3XL",
+          "image_path": "products/2026/06/10/Sweat_Oversized_Pullover_Hoodie_JV7VMYt.png",
+          "image_alt": "Sweat Oversized Pullover Hoodie-69 NAVY"
+        }
+      ],
+      "payment": {
+        "method": "credit_card",
+        "status": "success",
+        "amount": "49.86",
+        "card_last_four": "4242",
+        "transaction_id": "TXN-SEED-000018",
+        "paid_at": "2026-06-10T00:01:00+00:00"
+      }
+    },
+    {
+      "order_no": "ORD-20260611-100000000019",
+      "username": "daniel.ho",
+      "full_name": "Daniel Ho",
+      "email": "daniel.ho@yahoo.com",
+      "phone": "96543210",
+      "address": "House 12, Palm Springs, Yuen Long, New Territories",
+      "status": "paid",
+      "created_at": "2026-06-11T05:00:00+00:00",
+      "total": "99.80",
+      "items": [
+        {
+          "sku": "protection-cardigan-00-M",
+          "quantity": 2,
+          "price": "49.90",
+          "subtotal": "99.80",
+          "product_name": "Protection Cardigan",
+          "product_slug": "protection-cardigan",
+          "color_name": "00 WHITE",
+          "size": "M",
+          "image_path": "products/2026/06/10/usgoods_01_484505_3x4_8XZ6Hz4.avif",
+          "image_alt": "Protection Cardigan-00 WHITE"
+        }
+      ],
+      "payment": {
+        "method": "credit_card",
+        "status": "success",
+        "amount": "99.80",
+        "card_last_four": "4242",
+        "transaction_id": "TXN-SEED-000019",
+        "paid_at": "2026-06-11T05:01:00+00:00"
+      }
+    },
+    {
+      "order_no": "ORD-20260612-100000000020",
+      "username": "natalie.tam",
+      "full_name": "Natalie Tam",
+      "email": "natalie.tam@outlook.com",
+      "phone": "61239876",
+      "address": "Flat 7, 3/F, Mei Foo Sun Chuen, Stage 4, Lai Chi Kok, Kowloon",
+      "status": "paid",
+      "created_at": "2026-06-12T08:00:00+00:00",
+      "total": "39.90",
+      "items": [
+        {
+          "sku": "polo-short-sleeve-sw-69-M",
+          "quantity": 1,
+          "price": "39.90",
+          "subtotal": "39.90",
+          "product_name": "Polo Short Sleeve Sweater",
+          "product_slug": "polo-short-sleeve-sweater",
+          "color_name": "69 NAVY",
+          "size": "M",
+          "image_path": "products/2026/06/10/usgoods_69_485224_3x4_IXYY1di.avif",
+          "image_alt": "Polo Short Sleeve Sweater-69 NAVY"
+        }
+      ],
+      "payment": {
+        "method": "credit_card",
+        "status": "success",
+        "amount": "39.90",
+        "card_last_four": "4242",
+        "transaction_id": "TXN-SEED-000020",
+        "paid_at": "2026-06-12T08:01:00+00:00"
+      }
+    },
+    {
+      "order_no": "ORD-20260613-100000000021",
+      "username": "kevin.yip",
+      "full_name": "Kevin Yip",
+      "email": "kevin.yip@gmail.com",
+      "phone": "23456789",
+      "address": "Office 1205, 12/F, AIA Tower, 183 Electric Road, North Point, Hong Kong",
+      "status": "paid",
+      "created_at": "2026-06-13T01:00:00+00:00",
+      "total": "99.80",
+      "items": [
+        {
+          "sku": "smooth-cotton-sweate-03-XS",
+          "quantity": 2,
+          "price": "49.90",
+          "subtotal": "99.80",
+          "product_name": "Smooth Cotton Sweater",
+          "product_slug": "smooth-cotton-sweater",
+          "color_name": "03 GRAY",
+          "size": "XS",
+          "image_path": "products/2026/06/10/Smooth_Cotton_Sweater_4qh1sa2.png",
+          "image_alt": "Smooth Cotton Sweater-03 GRAY"
+        }
+      ],
+      "payment": {
+        "method": "credit_card",
+        "status": "success",
+        "amount": "99.80",
+        "card_last_four": "4242",
+        "transaction_id": "TXN-SEED-000021",
+        "paid_at": "2026-06-13T01:01:00+00:00"
+      }
+    },
+    {
+      "order_no": "ORD-20260614-100000000022",
+      "username": "angela.mak",
+      "full_name": "Angela Mak",
+      "email": "angela.mak@hotmail.com",
+      "phone": "34567890",
+      "address": "Flat 2B, G/F, Village House, 88 Tai Po Road, Tai Po, New Territories",
+      "status": "paid",
+      "created_at": "2026-06-14T03:00:00+00:00",
+      "total": "59.80",
+      "items": [
+        {
+          "sku": "pointelle-sweater-32-XS",
+          "quantity": 1,
+          "price": "29.90",
+          "subtotal": "29.90",
+          "product_name": "Pointelle Sweater",
+          "product_slug": "pointelle-sweater",
+          "color_name": "32 BEIGE",
+          "size": "XS",
+          "image_path": "products/2026/06/10/usgoods_32_485574_3x4_RTUmnUt.avif",
+          "image_alt": "Pointelle Sweater-32 BEIGE"
+        },
+        {
+          "sku": "crew-neck-t-shirt-09-L",
+          "quantity": 1,
+          "price": "29.90",
+          "subtotal": "29.90",
+          "product_name": "Crew Neck T-Shirt",
+          "product_slug": "crew-neck-t-shirt",
+          "color_name": "09 BLACK",
+          "size": "L",
+          "image_path": "products/2026/06/10/crew-neck-t-shirt_TeMYsLY.png",
+          "image_alt": "Crew Neck T-Shirt-09 BLACK"
+        }
+      ],
+      "payment": {
+        "method": "credit_card",
+        "status": "success",
+        "amount": "59.80",
+        "card_last_four": "4242",
+        "transaction_id": "TXN-SEED-000022",
+        "paid_at": "2026-06-14T03:01:00+00:00"
+      }
+    },
+    {
+      "order_no": "ORD-20260615-100000000023",
+      "username": "brandon.chiu",
+      "full_name": "Brandon Chiu",
+      "email": "brandon.chiu@gmail.com",
+      "phone": "91238888",
+      "address": "Flat 25, 10/F, The Wings, 9 Tong Yin Street, Tseung Kwan O, New Territories",
+      "status": "paid",
+      "created_at": "2026-06-15T07:00:00+00:00",
+      "total": "29.70",
+      "items": [
+        {
+          "sku": "v-neck-t-shirt-32-XL",
+          "quantity": 2,
+          "price": "14.85",
+          "subtotal": "29.70",
+          "product_name": "V-Neck T-Shirt",
+          "product_slug": "v-neck-t-shirt",
+          "color_name": "32 BEIGE",
+          "size": "XL",
+          "image_path": "products/2026/06/10/usgoods_32_487302_3x4_SObZlFT.avif",
+          "image_alt": "V-Neck T-Shirt-32 BEIGE"
+        }
+      ],
+      "payment": {
+        "method": "credit_card",
+        "status": "success",
+        "amount": "29.70",
+        "card_last_four": "4242",
+        "transaction_id": "TXN-SEED-000023",
+        "paid_at": "2026-06-15T07:01:00+00:00"
+      }
+    },
+    {
+      "order_no": "ORD-20260616-100000000024",
+      "username": "grace.lau",
+      "full_name": "Grace Lau",
+      "email": "grace.lau@yahoo.com.hk",
+      "phone": "69998888",
+      "address": "Flat 601, 6/F, Island Resort, 28 Siu Sai Wan Road, Chai Wan, Hong Kong",
+      "status": "paid",
+      "created_at": "2026-06-16T02:00:00+00:00",
+      "total": "49.90",
+      "items": [
+        {
+          "sku": "protection-cardigan-00-M",
+          "quantity": 1,
+          "price": "49.90",
+          "subtotal": "49.90",
+          "product_name": "Protection Cardigan",
+          "product_slug": "protection-cardigan",
+          "color_name": "00 WHITE",
+          "size": "M",
+          "image_path": "products/2026/06/10/usgoods_01_484505_3x4_8XZ6Hz4.avif",
+          "image_alt": "Protection Cardigan-00 WHITE"
+        }
+      ],
+      "payment": {
+        "method": "credit_card",
+        "status": "success",
+        "amount": "49.90",
+        "card_last_four": "4242",
+        "transaction_id": "TXN-SEED-000024",
+        "paid_at": "2026-06-16T02:01:00+00:00"
+      }
+    },
+    {
+      "order_no": "ORD-20260617-100000000025",
+      "username": "jason.chan",
+      "full_name": "Jason Chan",
+      "email": "jason.chan@gmail.com",
+      "phone": "91234567",
+      "address": "Flat 12A, 8/F, Tower 1, Harbour Centre, 25 Harbour Road, Wan Chai, Hong Kong",
+      "status": "paid",
+      "created_at": "2026-06-17T11:00:00+00:00",
+      "total": "99.76",
+      "items": [
+        {
+          "sku": "sweat-oversized-pull-69-3XL",
+          "quantity": 1,
+          "price": "49.86",
+          "subtotal": "49.86",
+          "product_name": "Sweat Oversized Pullover Hoodie",
+          "product_slug": "sweat-oversized-pullover-hoodie",
+          "color_name": "69 NAVY",
+          "size": "3XL",
+          "image_path": "products/2026/06/10/Sweat_Oversized_Pullover_Hoodie_JV7VMYt.png",
+          "image_alt": "Sweat Oversized Pullover Hoodie-69 NAVY"
+        },
+        {
+          "sku": "smooth-cotton-sweate-03-XS",
+          "quantity": 1,
+          "price": "49.90",
+          "subtotal": "49.90",
+          "product_name": "Smooth Cotton Sweater",
+          "product_slug": "smooth-cotton-sweater",
+          "color_name": "03 GRAY",
+          "size": "XS",
+          "image_path": "products/2026/06/10/Smooth_Cotton_Sweater_4qh1sa2.png",
+          "image_alt": "Smooth Cotton Sweater-03 GRAY"
+        }
+      ],
+      "payment": {
+        "method": "credit_card",
+        "status": "success",
+        "amount": "99.76",
+        "card_last_four": "4242",
+        "transaction_id": "TXN-SEED-000025",
+        "paid_at": "2026-06-17T11:01:00+00:00"
+      }
+    },
+    {
+      "order_no": "ORD-TEST-VALID-001",
+      "username": "jason.chan",
+      "full_name": "Jason Chan",
+      "email": "jason.chan@gmail.com",
+      "phone": "91234567",
+      "address": "Flat 12A, 8/F, Tower 1, Harbour Centre, 25 Harbour Road, Wan Chai, Hong Kong",
+      "status": "paid",
+      "created_at": "2026-06-20T02:00:00+00:00",
+      "total": "29.90",
+      "items": [
+        {
+          "sku": "crew-neck-t-shirt-09-L",
+          "quantity": 1,
+          "price": "29.90",
+          "subtotal": "29.90",
+          "product_name": "Crew Neck T-Shirt",
+          "product_slug": "crew-neck-t-shirt",
+          "color_name": "09 BLACK",
+          "size": "L",
+          "image_path": "products/2026/06/10/crew-neck-t-shirt_TeMYsLY.png",
+          "image_alt": "Crew Neck T-Shirt-09 BLACK"
+        }
+      ],
+      "payment": {
+        "method": "credit_card",
+        "status": "success",
+        "amount": "29.90",
+        "card_last_four": "4242",
+        "transaction_id": "TXN-SEED-ID-001",
+        "paid_at": "2026-06-20T02:01:00+00:00"
+      }
+    },
+    {
+      "order_no": "ORD-TEST-VALID-003",
+      "username": "emily.wong",
+      "full_name": "Emily Wong",
+      "email": "emily.wong@yahoo.com.hk",
+      "phone": "+85262345678",
+      "address": "Unit 5, 15/F, Block B, Laguna City, 8 Laguna Street, Lam Tin, Kowloon",
+      "status": "pending",
+      "created_at": "2026-06-20T03:00:00+00:00",
+      "total": "29.90",
+      "items": [
+        {
+          "sku": "crew-neck-t-shirt-09-L",
+          "quantity": 1,
+          "price": "0.00",
+          "subtotal": "0.00",
+          "product_name": "",
+          "product_slug": "",
+          "color_name": "",
+          "size": "",
+          "image_path": "",
+          "image_alt": ""
+        }
+      ],
+      "payment": {
+        "method": "credit_card",
+        "status": "failed",
+        "amount": "29.90",
+        "card_last_four": "4242",
+        "transaction_id": "TXN-SEED-ID-003",
+        "paid_at": null
+      }
+    },
+    {
+      "order_no": "ORD-TEST-VALID-004",
+      "username": "ryan.lee",
+      "full_name": "Ryan Lee",
+      "email": "ryan.lee@outlook.com",
+      "phone": "55443322",
+      "address": "Room 801, Grand Millennium Plaza, 181 Queen's Road Central, Central, Hong Kong",
+      "status": "cancelled",
+      "created_at": "2026-06-20T04:00:00+00:00",
+      "total": "14.85",
+      "items": [
+        {
+          "sku": "v-neck-t-shirt-32-XL",
+          "quantity": 1,
+          "price": "14.85",
+          "subtotal": "14.85",
+          "product_name": "V-Neck T-Shirt",
+          "product_slug": "v-neck-t-shirt",
+          "color_name": "32 BEIGE",
+          "size": "XL",
+          "image_path": "products/2026/06/10/usgoods_32_487302_3x4_SObZlFT.avif",
+          "image_alt": "V-Neck T-Shirt-32 BEIGE"
+        }
+      ],
+      "payment": {
+        "method": "credit_card",
+        "status": "failed",
+        "amount": "14.85",
+        "card_last_four": "4242",
+        "transaction_id": "TXN-SEED-ID-004",
+        "paid_at": null
+      }
+    },
+    {
+      "order_no": "ORD-TEST-VALID-005",
+      "username": "sophie.lam",
+      "full_name": "Sophie Lam",
+      "email": "sophie.lam@gmail.com",
+      "phone": "98765432",
+      "address": "Flat C, 22/F, The Zenith, 258 Queen's Road East, Wan Chai, Hong Kong",
+      "status": "failed",
+      "created_at": "2026-06-20T05:00:00+00:00",
+      "total": "59.80",
+      "items": [
+        {
+          "sku": "pointelle-sweater-32-XS",
+          "quantity": 2,
+          "price": "29.90",
+          "subtotal": "59.80",
+          "product_name": "Pointelle Sweater",
+          "product_slug": "pointelle-sweater",
+          "color_name": "32 BEIGE",
+          "size": "XS",
+          "image_path": "products/2026/06/10/usgoods_32_485574_3x4_RTUmnUt.avif",
+          "image_alt": "Pointelle Sweater-32 BEIGE"
+        }
+      ],
+      "payment": {
+        "method": "credit_card",
+        "status": "failed",
+        "amount": "59.80",
+        "card_last_four": "4242",
+        "transaction_id": "TXN-SEED-ID-005",
+        "paid_at": null
+      }
+    },
+    {
+      "order_no": "ORD-TEST-VALID-002",
+      "username": "marcus.cheung",
+      "full_name": "Marcus Cheung",
+      "email": "marcus.cheung@hotmail.com",
+      "phone": "67890123",
+      "address": "Flat 3, 6/F, Block 2, City One Shatin, Sha Tin, New Territories",
+      "status": "paid",
+      "created_at": "2026-06-20T07:00:00+00:00",
+      "total": "89.80",
+      "items": [
+        {
+          "sku": "polo-short-sleeve-sw-69-M",
+          "quantity": 1,
+          "price": "39.90",
+          "subtotal": "39.90",
+          "product_name": "Polo Short Sleeve Sweater",
+          "product_slug": "polo-short-sleeve-sweater",
+          "color_name": "69 NAVY",
+          "size": "M",
+          "image_path": "products/2026/06/10/usgoods_69_485224_3x4_IXYY1di.avif",
+          "image_alt": "Polo Short Sleeve Sweater-69 NAVY"
+        },
+        {
+          "sku": "smooth-cotton-sweate-03-XS",
+          "quantity": 1,
+          "price": "49.90",
+          "subtotal": "49.90",
+          "product_name": "Smooth Cotton Sweater",
+          "product_slug": "smooth-cotton-sweater",
+          "color_name": "03 GRAY",
+          "size": "XS",
+          "image_path": "products/2026/06/10/Smooth_Cotton_Sweater_4qh1sa2.png",
+          "image_alt": "Smooth Cotton Sweater-03 GRAY"
+        }
+      ],
+      "payment": {
+        "method": "credit_card",
+        "status": "success",
+        "amount": "89.80",
+        "card_last_four": "4242",
+        "transaction_id": "TXN-SEED-ID-002",
+        "paid_at": "2026-06-20T07:01:00+00:00"
+      }
+    }
+  ]
+}

@@ -10,6 +10,7 @@ class OrderItemInline(admin.TabularInline):
         'product_name', 'sku', 'color_name', 'size',
         'price', 'quantity', 'subtotal', 'image_path',
     )
+    can_delete = False
 
 
 class PaymentInline(admin.StackedInline):
@@ -22,7 +23,7 @@ class PaymentInline(admin.StackedInline):
 
 @admin.register(Order)
 class OrderAdmin(admin.ModelAdmin):
-    list_display = ('order_no', 'user', 'product_summary', 'total', 'status', 'created_at')
+    list_display = ('order_no', 'user', 'total', 'status', 'created_at')
     list_filter = ('status', 'created_at')
     search_fields = ('order_no', 'full_name', 'email', 'phone')
     readonly_fields = ('order_no', 'created_at', 'updated_at')
@@ -33,15 +34,6 @@ class OrderAdmin(admin.ModelAdmin):
         'total', 'created_at', 'updated_at',
     )
 
-    @admin.display(description='Products')
-    def product_summary(self, obj):
-        # 用快照 product_name，不要用 variant.product.name（歷史訂單較準確）
-        names = [item.product_name for item in obj.items.all()]
-        return ', '.join(names) if names else '—'
-    def get_queryset(self, request):
-        # 避免列表每一筆訂單都多查一次 items（N+1）
-        qs = super().get_queryset(request)
-        return qs.prefetch_related('items')
 
 
 @admin.register(Payment)
