@@ -29,6 +29,7 @@ urlpatterns = [
     path('carts/', include('carts.urls', namespace='carts')),
     path("subscribe/", subscribe_newsletter, name="subscribe"),
     path('orders/', include('orders.urls', namespace='orders')),
+    path('api/v1/', include('config.api_urls')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 if settings.DEBUG:
