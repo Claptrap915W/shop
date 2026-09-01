@@ -4,8 +4,21 @@ import reactLogo from './assets/react.svg'
 import viteLogo from './assets/vite.svg'
 import './App.css'
 
+import { useEffect } from 'react'
+import { getProducts, getProduct } from './api/client'
+
 function App() {
   const [count, setCount] = useState(0)
+
+  useEffect(() => {
+    getProducts()
+      .then((data) => console.log('list', data.count, data.results?.length))
+      .catch((err) => console.error('list failed', err))
+  
+    getProduct('sweat-oversized-pullover-hoodie')
+      .then((data) => console.log('detail', data.name, data.variants?.[0]?.id))
+      .catch((err) => console.error('detail failed', err))
+  }, [])
 
   return (
     <>
