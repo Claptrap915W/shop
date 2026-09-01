@@ -74,7 +74,7 @@ def product_list(request):
 def product(request, slug):
 
     # Constants for size choices
-    SIZES_LIST = ('XS', 'S', 'M', 'L', 'XL', 'XXL')
+    SIZES_LIST = ('XS', 'S', 'M', 'L', 'XL', '2XL', '3XL')
 
     # 如果商品已下架（is_active=False），即使知道網址也會看到 404，防止已下架商品被直接訪問
     # 由於我們在 ActiveProductManager 已經 prefetch_related('images', 'variants')
