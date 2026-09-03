@@ -2,8 +2,8 @@
 
 const BASE_URL = import.meta.env.VITE_API_URL
 
-async function apiFetch(path){
-    const response = await fetch(`${BASE_URL}${path}`)
+async function apiFetch(path, signal){
+    const response = await fetch(`${BASE_URL}${path}`, { signal })
 
     if (!response.ok){
         let detail = ''
@@ -31,10 +31,13 @@ export function getProducts({ page, category, q, min, max} = {}){
     return apiFetch(`/products/${query ? `?${query}` : ''}`)
 }
 
-export function getProduct(slug, color){
+export function getProduct(slug, color, signal){
     const params = new URLSearchParams()
     if (color) params.set('color', color)
     const query = params.toString()
-    return apiFetch(`/products/${slug}/${query ? `?${query}` : ''}`)
+    return apiFetch(`/products/${slug}/${query ? `?${query}` : ''}`, signal)
 }
     
+export function getCategories() {
+    return apiFetch('/categories/')
+}
