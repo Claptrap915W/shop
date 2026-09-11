@@ -41,3 +41,74 @@ export function getProduct(slug, color, signal){
 export function getCategories() {
     return apiFetch('/categories/')
 }
+
+function getCsrfToken() {
+    const match = document.cookie.match(/(?:^|;\s*)csrftoken=([^;]+)/)
+    return match ? decodeURIComponent(match[1]) : ''
+}
+
+async function cartFetch(path, { method = 'GET', body, signal } = {}){
+    const headers = {}
+    if (body != null) {
+        headers['Content-Type'] = 'application/json'
+    }
+    if (method !== 'GET' && method !== 'HEAD'){
+        headers['X-CSRFToken'] = getCsrfToken()
+    }
+
+    const response = await fetch(`${BASE_URL}${path}`,{
+        method,
+        headers,
+        credentials: 'include',
+        signal,
+        body: body != null ? JSON.stringify(body) : undefined,
+    })
+
+    if (!response.ok) {
+        let detail = ''
+        let errBody = null
+        try {
+            errBody = await response.json()
+            detail = errBody.detail ?? JSON.stringify(errBody)
+        } catch {
+            detail = response.statusText || 'no response body'
+        }
+    
+        const error = new Error(`API ${response.status}: ${detail}`)
+        error.status = response.status
+        error.body = errBody
+        throw error
+    }
+
+    if (response.status === 204){
+        return null
+    }
+
+    return response.json()
+}
+
+export function getCart(signal) {
+    return cartFetch('/cart/', { signal })
+}
+
+
+export function addToCart(variantId, quantity = 1, signal) {
+    return cartFetch('/cart/items/', {
+        method: 'POST',
+        body: { variant_id: variantId, quantity },
+        signal,
+    })
+}
+export function updateCartItem(variantId, quantity, signal) {
+    return cartFetch(`/cart/items/${variantId}/`, {
+        method: 'PATCH',
+        body: { quantity },
+        signal,
+    })
+}
+export function removeCartItem(variantId, signal) {
+    return cartFetch(`/cart/items/${variantId}/`, {
+        method: 'DELETE',
+        signal,
+    })
+}

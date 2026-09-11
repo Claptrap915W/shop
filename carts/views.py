@@ -10,7 +10,12 @@ def carts_list(request):
 
 
 def carts_add(request, variant_id):
-    #從購物車頁「增加數量」。
+    """
+    DEPRECATED (P4.0): Legacy template 加购端点。
+    GET ?quantity=N 会改 session — 刷新／预抓都会偷偷加件。
+    新 client 必须用 POST /api/v1/cart/items/（body: variant_id + quantity）。
+    本 view 保留给 carts_list.html；P6/P7 才移除。
+    """
     cart = Cart(request)
 
     # 從 DB 撈出 variant，找不到就 404
