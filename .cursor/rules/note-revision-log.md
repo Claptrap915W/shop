@@ -664,21 +664,21 @@ Record 6 exposed the core failure mode of this system: a checklist item was tick
 
 ## Revision Statistics v2（取代上方 Revision Statistics 的現行數字；舊欄保留作歷史）
 
-- **Total records**: 47（1–32 舊專案區；33–47 shop 區）
+- **Total records**: 52（1–32 舊專案區；33–52 shop 區）
 - **Pending**: 4（Record 1、18、21、24 —— 全屬舊專案教材，不阻塞 shop）
-- **Processed**: 43（Records 2–17、19–20、22–23、25–47）
+- **Processed**: 48（Records 2–17、19–20、22–23、25–52）
 - **Archived**: 0（本檔仍然從不刪除任何文字）
 - **舊「Blocking the 8/31 must-do deliverables」欄位**：**已廢止**。理由：那約定屬外部專案，且已改成軟期限。Docker 以 shop 的 **P8** 形式存續。
-- **現行 blocking（以閘門計）**：**P4 未綠**—— Cart API（session 車、`variant_id`、禁止 GET 改狀態）。P1–P3 閘門皆綠（P3 試錯 3/5 通關）。
-- **已完成段數**：5.5 ／ 11.5 段（P1–P8，不含 P7）
-- **試錯總帳**：P1.0 2/6；P1.1 0/4；P1.2 0/6；P1.3 0/5；P2 1/5；**P3 3/5**
+- **現行 blocking（以閘門計）**：**P6.2 未綠**—— `fulfillment_status` ＋ 付款失敗路徑。P1–P5.5 閘門皆綠；**P6.1 核心已綠（9/12）**。
+- **已完成段數**：**~10** ／ 11.5 段（P1–P5.5 關；P6 約 1/3 段計入）
+- **試錯總帳**：P1.0 2/6；P1.1 0/4；P1.2 0/6；P1.3 0/5；P2 1/5；P3 3/5；P4 2/6；P5 2/8；**P6.1 4 項（手測）**
 
 ## Cross-File Map v2（shop 專用；取代上方表格作為現行權威）
 
 | File | Role | What it owns |
 | --- | --- | --- |
 | shop repo（`config/`、六個 app） | **Ground truth** | 任何文件與它衝突時，改文件 |
-| `shop-rebuild-checklist.md` v2.7 | Plan | P0–P8 順序、契約、錯誤菜單、閘門、段數預算、試錯總帳 |
+| `shop-rebuild-checklist.md` v3.0 | Plan | P0–P8 順序、契約、錯誤菜單、閘門、段數預算、試錯總帳 |
 | `system.md` v4.0 | Workflow | W0–W6 流程、錯誤菜單格式、B1–B3 支持階梯、L0–L3 ＋ 試錯覆蓋率、指令表 |
 | `teacher-persona.md` v4.0 | Character | 語氣、shop 隆噂表、地獅笑話庫、第一性原理＋怎麼弄壞它 |
 | `note-revision-log.md`（本檔） | Memory | 教材缺陷、決策、驗証層級、閘門進度、試錯總帳 |
@@ -895,5 +895,146 @@ Record 6 exposed the core failure mode of this system: a checklist item was tick
 - **Suggested Revision**: 清單 v2.7：`p3-auth` completed；repo 現況 + P3 落地檔 + 試錯總帳四行；blocking → P4。Statistics v2 更新。下一刀 P4.0 `carts/api_views.py`。
 - **Verification Level**: **L3**（Postman 真實 status + JSON）；試錯 3/5 → **通關**
 - **Gate Impact**: P3 關。已完成 **5.5**／11.5 段。blocking → **P4**
+- **Priority**: High
+- **Status**: Processed
+
+---
+
+## Record 48 — P4 開工（L2 落地；L3 部分綠）；blocking 仍 P4
+
+- **Date**: 2026-09-05
+- **Trigger**: 學習者 `/開工 P4`，逐輪完成 serializer／view／路由；curl 驗空車 GET 與 `quantity=-999` → 400；收工下令更新 checklist／revision log。
+- **Issue Description**:
+  1. **P4 後端骨架落地（L2）**：`carts/serializers.py`（`CartItemWriteSerializer`、`CartItemPatchSerializer`）；`carts/api_views.py`（`CartListCreateView.get/post`、`CartItemDetailView.patch`）；`config/api_urls.py` 掛 `cart/`、`cart/items/`、`cart/items/<int:variant_id>/`。
+  2. **L3 部分綠（curl）**：`GET /api/v1/cart/` 空車 → 200 `{"items":[],"total_quantity":0,"total_price":"0"}`；`POST .../cart/items/` `quantity=-999` → **400** + serializer 錯誤訊息（菜單 #5）。
+  3. **L3 未全綠**：POST 加 2 → PATCH 5 → GET 一致的全序列未在本 session 跑通；409 缺貨未驗；`DELETE` 未寫；P4.0 舊 `carts_add` GET deprecated 未標；前端 cart client 未接。
+  4. **Session 內 typo（已修或已記）**：serializer 初稿 `variatn_id`／`quantuty`；`post()` 曾漏 `status=` 導致 invalid body 回 HTTP 200；`quantily` key 拼錯使累加庫存檢查失效；`patch()` 曾 `vatiant=` 導致 TypeError；誤 import `statistics.quantiles`；detail URL 初稿缺尾斜線。log 更新時已修 `vatiant`、尾斜線、移除多餘 import。
+  5. **契約對齊**：POST body `{variant_id, quantity}`；PATCH body `{quantity}` + path id；庫存不足設計為 409（POST 累加、PATCH 覆蓋各查一次 `variant.stock`）；GET 唯讀、不走舊 template GET 加購形狀。
+  6. **Git**：P4 檔案未 commit。
+- **Suggested Revision**: 清單 v2.8：`p4-cart` → `in_progress`；repo 現況 + P4 落地檔 + 試錯 1/6 + L3 狀態；blocking 仍 P4。Statistics v2 + Cross-File Map 版本號。`system.md` Ground Truth：P3 標已綠、P4 標進行中。下一刀：`DELETE` → L3 全序列 curl → 409 驗證 → P4.0 deprecated。
+- **Verification Level**: **L2**（真碼在 repo；L3 僅部分 curl）。試錯 1/6 → **未通關**（需 ≥2）
+- **Gate Impact**: P4 未關。已完成段數仍 **5.5**／11.5（P4 約耗 1/2 段，未計入完成）。blocking → **P4**
+- **Priority**: High
+- **Status**: Processed
+
+---
+
+## Record 49 — P4 後端 L3 主序列綠 + 前端 cart client；409／UI 待完成
+
+- **Date**: 2026-09-07
+- **Trigger**: 學習者完成 DELETE、curl L3 全序列（9/6）；完成 `client.js` cart 四函式與結構化 error（9/7）；討論 session／CSRF／`response.ok`／204；下令更新 checklist／revision log。
+- **Issue Description**:
+  1. **P4 後端 L3 主序列綠（9/6 curl）**：同一 `cart.jar` — POST qty2 → PATCH qty5 → GET `total_quantity:5` → DELETE **204** → GET 空車。`CartItemDetailView.delete` 已落地。
+  2. **409 仍未當菜單踩**：DELETE 後 PATCH `quantity:9999` → **404** `Item not in cart`（預期行為，非 409）。菜單 #4 須在車內、DELETE 前重測。
+  3. **前端 cart client（L2）**：`frontend/src/api/client.js` — `cartFetch`（`credentials:'include'`、CSRF、`204→null`）；`getCart`／`addToCart`／`updateCartItem`／`removeCartItem`；錯誤物件掛 `error.status`／`error.body` 供 409 UI 分支。
+  4. **教學釐清**：匿名 session 車不需登入；CSRF 是意圖驗證非身分驗證；`response.ok` 只檢 HTTP 狀態；204 不可 `json()`。
+  5. **未做**：P4.0 `carts/views.py::carts_add` deprecated 註記；`ProductDetailPage` 加購按鈕；`CartPage`；`:5173` cart 端對端；409 curl 試錯 #4。
+  6. **Git**：P4 檔案仍**未 commit**。
+- **Suggested Revision**: 清單 v2.9：repo 現況、P4 L3 狀態、試錯總帳三行、v2.9 變更記錄。Statistics v2 + `system.md` P4 列。下一刀：409 curl → P4.0 → 詳頁按鈕。
+- **Verification Level**: **L3（脆）**（後端主序列 curl 真測；試錯 1/6 未達通關；前端 client 未 `:5173` 實測）
+- **Gate Impact**: P4 未關。blocking → **P4**。P4 預算約 **1.75/2** 段。
+- **Priority**: High
+- **Status**: Processed
+
+---
+
+## Record 50 — P4 閘門綠（L3 通關）；blocking → P5
+
+- **Date**: 2026-09-08
+- **Trigger**: 學習者 curl 409 試錯 #4（`VID=6` PATCH 9999 → `available:10` HTTP 409）；`:5173` 详页加购成功；`carts_add` P4.0 DEPRECATED 已標；下令更新 checklist／revision log。
+- **Issue Description**:
+  1. **P4 L3 通關**：主序列 curl（9/6）+ 409（9/8）+ 400 `#5`（9/5）+ `:5173` 加购（`Smooth Cotton Sweater` variant_id 6，「共 1 件」）。
+  2. **试錯 2/6 通關**：#4 超庫存 409；#5 負數 400。
+  3. **落地檔完整**：後端 `carts/serializers.py`、`carts/api_views.py`（CRUD）、`config/api_urls.py`；`carts/views.py::carts_add` deprecated docstring；`client.js` cart 四函式 + 結構化 error；`ProductDetailPage.jsx` 加购 + `err.body?.available`。
+  4. **非阻塞積壓**：`CartPage` 未做；P3 登入 `:5173` 仍未接 — 不挡 P4 关闸。
+  5. **Git**：P4 檔案仍**未 commit**。
+- **Suggested Revision**: 清單 v3.0：`p4-cart` completed；repo 現況；P4 段 L3 綠；试錯總帳三行；blocking → P5。Statistics：已完成 **7.5**／11.5。Record 50。
+- **Verification Level**: **L3**（curl + `:5173` 真測）；试錯 2/6 → **通關**
+- **Gate Impact**: **P4 關**。已完成 **7.5**／11.5 段。blocking → **P5**
+- **Priority**: High
+- **Status**: Processed
+
+---
+
+## Record 51 — P5 + P5.5 閘門綠；blocking → P6
+
+- **Date**: 2026-09-11
+- **Trigger**: 學習者完成 P5 Postman L3（201／400 空車／404 越權）+ P5.5 六測試全綠（`python manage.py test products carts orders -v 2` → OK）；下令講解 `carts/tests.py` 並更新 checklist／revision log。
+- **Issue Description**:
+  1. **P5 L3 通關**：`POST /api/v1/orders/` 201 + `order_no`；空车 400；`GET /orders/` 分页列表；`GET /orders/{order_no}/` 详情含 items/payment；admin session 查 postman_test 的 order_no → 404。
+  2. **P5 落地檔**：`orders/serializers.py`（CheckoutWrite + List + Detail 嵌套）；`orders/api_views.py`（`OrderListCreateView`、`OrderDetailView`）；`config/api_urls.py` orders 两路由。
+  3. **P5.5 L3 通關**：`products/tests.py`（2）、`carts/tests.py`（2）、`orders/tests.py`（2）；合计 6/6 OK。
+  4. **写测试踩错**：`assertInstance`→`assertIsInstance`；下架假绿；`_make_variant` 重复 slug UniqueViolation（setUp + test 双调）。
+  5. **P5 试錯 2/8**：#3 清车；#4 越权 404。Idempotency-Key 仍未做（非阻塞）。
+  6. **Git**：P4–P5.5 檔案仍**未 commit**。
+- **Suggested Revision**: 清單 v3.0：`p5-checkout`／`p5-5-tests` completed；repo 現況 9/11；试錯總帳 P5/P5.5 行；v2.4 增補 16–17；blocking → P6。Record 51。
+- **Verification Level**: **L3**（Postman + manage.py test 真測）
+- **Gate Impact**: **P5 + P5.5 關**。已完成 **9**／11.5 段。blocking → **P6**
+- **Priority**: High
+- **Status**: Processed
+
+---
+
+## Record 52 — P6.1 核心綠（Cart 表 + merge + 原子清車）；blocking → P6.2
+
+- **Date**: 2026-09-12
+- **Trigger**: 學習者完成 P6 第 1 項核心：建 `Cart`／`CartItem` 表、merge service、login／register 掛載、`clear()` 修復、`place_order` 內 DB 清車；下令更新 checklist／revision log。
+- **Issue Description**:
+  1. **Models + migrate**：`carts/models.py` — `Cart`（user OneToOne）、`CartItem`（cart FK、variant PROTECT、quantity ≥1、`unique_together`）；`carts/migrations/0001_initial.py` 已 apply。
+  2. **Merge service**：`carts/services.py::merge_session_cart_into_db` — 讀 session 二層結構 `{"variant_id": {"quantity": N}}`；`ProductVariant.objects.get` + `DoesNotExist` → warning + skip；`update_or_create` **逐項覆蓋**（非加總）；合併時**不截庫存**。
+  3. **Login／Register hook**：`accounts/api_views.py`（login）、`accounts/views.py`（register）— merge 在 `authenticate` 成功後、`login()` 前；`try/except Exception` + `logger.exception`，merge 失敗不挡登入。
+  4. **Session clear 修復**：`carts/cart.py::clear()` — `pop('carts', None)` + 重設 `self.carts = self.session['carts'] = {}`；連續兩次 clear 無 KeyError。
+  5. **Checkout 原子清 DB 車**：`orders/services.py::place_order` — `@transaction.atomic` 內 `DBCart.items.all().delete()`；session `cart.clear()` 仍留 `orders/api_views.py` 獨立 try/except（過渡期 Cart API 仍 session）。
+  6. **Merge 規則已鎖**：逐項覆蓋；合併不截庫存（購物車頁／結帳前擋）；登出 DB 車保留、session 由 `logout()` flush。
+  7. **試錯（手測）**：migrate 前 `relation "carts_cart" does not exist`；merge 未 try/except → `DoesNotExist`；loguru `%s` 格式；`del session['carts']` 二次 KeyError。
+  8. **驗證**：shell merge（好 variant 保留、999999 skip）；RequestFactory api_login → 200 + DB cart；double clear OK。
+  9. **仍待做（非阻塞 P6.1 核心）**：`carts/api_views.py` 已登入改讀寫 DB 車。
+  10. **Git**：P4–P6.1 檔案仍**未 commit**。
+- **Suggested Revision**: 清單 v3.0：`p6-schema-debt` → `in_progress`；repo 現況 9/12 + P6.1 落地檔 + merge 規則 + 試錯 4 行；P5 清車契約改寫；v2.4 增補 18；blocking → P6.2。Statistics v2 更新。Record 52。
+- **Verification Level**: **L3（脆）**（shell + RequestFactory 真測；P6.1 試錯 4 項手測；Cart API DB 切換未做）
+- **Gate Impact**: P6.1 核心綠；P6 全段未關。已完成 **~10**／11.5 段。blocking → **P6.2**（`fulfillment_status`）
+- **Priority**: High
+- **Status**: Processed
+
+---
+
+## Record 53 — P6.2 orders 半綠（M1 migrate + 付款失敗 + place_order 金額四欄）；blocking → M2
+
+- **Date**: 2026-09-13
+- **Trigger**: 學習者完成 P6.2 orders 側：M1 schema 定案並 migrate；結帳卡驗證 400 + `reason`；方向 B 模擬銀行拒絕（末四碼 `0002`）Postman L3；`place_order` 寫入金額四欄；統一 `card_declined` 的 `detail` 為 dict；下令更新 checklist／revision log。
+- **Issue Description**:
+  1. **M1 migrate ✅**：`orders/models.py` — `fulfillment_status`（default `unfulfilled`）、`internal_notes`、`subtotal`／`shipping_fee`／`tax`／`discount_amount`（default `0`）；刪 `Meta.indexes` 重複 `order_no`；`orders/migrations/0002_remove_order_orders_orde_order_n_7a9a09_idx_and_more.py` 已 apply。
+  2. **舊單回填策略 A**：M1 前訂單四金額欄 `0`、`total` 保留；新單由 `place_order` 寫齊。
+  3. **Serializer 輸入驗證**：`orders/serializers.py` — `validate_card_cvc`／`validate_card_expiry`（含過期 `monthrange` 月底比對）；`EXPIRY_PATTERN` 修正為 `r'^(0[1-9]|1[0-2])/(\d{2})$'`。
+  4. **API 400 契約**：`orders/api_views.py` — `invalid_card_number` vs `card_declined`（CVC/expiry）；`PaymentDeclinedError` → `card_declined` + `detail: {'card_number': [...]}`（dict 與 serializer 同形）。
+  5. **方向 B 銀行拒絕**：`orders/services.py` — `DECLINED_CARD_LAST_FOUR='0002'`（Stripe 測試慣例）；`PaymentDeclinedError` 在 `order.save` 後、`Payment.create` 前 raise；`@transaction.atomic` rollback → **不建 Order**；Postman `4000000000000002` → 400 + `Order.objects.count()` 不變。
+  6. **place_order 金額**：迴圈加總 → `subtotal`；`shipping_fee`／`tax`／`discount_amount` 暫 `0`；`total = subtotal + shipping + tax - discount`。
+  7. **試錯（9/13）**：`fr'...'` f-string 破壞 regex；`EXPIRY_PATTERN` 括號錯（01–09 月全掛）；`payment_data('...')` TypeError；`detail` 字串 vs dict 不一致（已修）。
+  8. **驗證**：Postman 0002 → 400 `card_declined`；`test_checkout_returns_201_with_order_no` 仍 OK。P6.2 新測試**刻意延後**至 P6 收尾一次補。
+  9. **仍待做**：M2 `products` nullable migrate；`Product.save()` 停 `base_price` 覆蓋；SKU `IntegrityError` 重試；P6 全段 6/6 測試重跑。
+  10. **Git**：P4–P6.2 檔案仍**未 commit**（分支 `feature/p4-p5-checkout-tests`）。
+- **Suggested Revision**: 清單 v3.0：repo 現況 9/13；M1 ✅；P6.2 半綠；試錯總帳 5 行；v2.4 增補 20；blocking → M2 + save 邏輯。Record 53。
+- **Verification Level**: **L3（脆）**（Postman + 單測回歸；P6.2 專項自動化測試未寫；M2 未做）
+- **Gate Impact**: P6.2 orders 半綠；**P6 全段未關**。blocking → **M2 + Product save 邏輯**
+- **Priority**: High
+- **Status**: Processed
+
+---
+
+## Record 54 — P6 全段 L3 通關（M2 migrate + save 邏輯債）；blocking → P8 或 P7
+
+- **Date**: 2026-09-13
+- **Trigger**: 學習者完成 P6 M2（`Product.image`／`ProductImage.color` nullable migrate）+ 邏輯債（停 `Product.save()` base_price 覆寫、SKU `IntegrityError` 重試）；`manage.py test products carts orders` → 6/6 OK；shell 驗 base_price 改動不洗 variant 價（49.90/49.90）；下令更新 checklist／revision log 並 push。
+- **Issue Description**:
+  1. **M2 migrate ✅**：`products/models.py` — `Product.image`、`ProductImage.color` → `null=True, blank=True`；`products/migrations/0002_alter_product_image_alter_productimage_color.py` 已 apply（一次 migrate，符合 M2 批次原則）。
+  2. **#3 停 base_price 覆寫 ✅**：刪 `Product.save()` 內 `self.variants.all().update(price=self.base_price)`；shell：`p.base_price += 1` → `p.save()` → `v.refresh_from_db()` → `49.90 49.90`。
+  3. **#4 SKU IntegrityError 重試 ✅**：`ProductVariant.save()` — 移除 `while ... .exists()`；改 `transaction.atomic()` + `try/except IntegrityError` 重試；`price` 補值在任一 `super().save()` 前（核對時曾誤放 return 後，已修正）。
+  4. **L3 閘門**：M1 + M2 migrate 完成；付款失敗路徑 9/13 已測；P5.5 六測試 9/13 仍 6/6 綠。
+  5. **試錯（9/13 P6 收尾）**：`ProductVariant.save()` price 順序錯（return 後 dead code）→ 搬至方法開頭；base_price 不洗 variant 預測驗證通過。
+  6. **非阻塞積壓**：P6.2 付款失敗自動化測試仍待補；`ProductImage.save()` 在 `color=None` 時 `alt_text` 可能含 `None`；Cart API 仍 session。
+  7. **Git**：分支 `feature/p6-order`；本輪 commit M2 migration + `products/models.py` 邏輯債 + checklist／log。
+- **Suggested Revision**: 清單 v3.0：`p6-schema-debt` → **completed**；repo 現況 9/13 P6 全段綠；M2 + 邏輯債落地檔；試錯總帳 +2 行；v2.4 增補 21；blocking → **P8 或 P7**。Record 54。
+- **Verification Level**: **L3**（migrate + shell + manage.py test 6/6 真測）
+- **Gate Impact**: **P6 全段關**。已完成 **~11**／11.5 段（P6 段數計入）。blocking → **P8 或 P7**
 - **Priority**: High
 - **Status**: Processed

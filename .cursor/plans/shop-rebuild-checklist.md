@@ -1,6 +1,6 @@
 ---
 name: Shop rebuild checklist
-overview: shop 開工清單 v2.7（已對帳真 repo ＋六份模板，並併入舊改善計劃書 46 項）：P1–P3 閘門綠（P3 Postman 五步走通；試錯 ≥2），下一刀 P4 Cart；再測試護欄、shop Docker、schema 還債。期限＝未綠的閘門，不是日曆。每個階段附錯誤菜單，通關要求 L3 閘門綠且真踩 ≥ 2 個錯。
+overview: shop 開工清單 v3.0（已對帳真 repo）：P1–P6 閘門綠（9/13）。P6 全段 L3：M1 orders + M2 products migrate、付款失敗、停 base_price 覆寫、SKU IntegrityError 重試；6/6 測試仍綠。blocking → P8 或 P7。期限＝未綠的閘門。
 todos:
 - id: p0-lock
   content: P0 決策鎖定：Variant 為可賣單位、訂單快照、Session+CSRF、/api/v1/
@@ -16,19 +16,19 @@ todos:
   status: completed
 - id: p4-cart
   content: P4 Cart API（仍包 session，禁止 GET 改狀態）
-  status: pending
+  status: completed
 - id: p5-checkout
   content: P5 Checkout API（201＋order_no／缺貨 409／只看自己的單）
-  status: pending
+  status: completed
 - id: p5-5-tests
-  content: P5.5 測試護欄（P6 前提；目前六個 tests.py 全空）
-  status: pending
+  content: P5.5 測試護欄（P6 前提；products/carts/orders 各 2 測試共 6 綠）
+  status: completed
 - id: p8-docker-shop
   content: P8 Docker 一鍵啟動（shop 自己的 compose：web + Postgres）
   status: pending
 - id: p6-schema-debt
-  content: P6 schema 還債：Cart 表、出貨欄、停 base_price 覆蓋、SKU 唯一性、封面單一來源、accounts/users
-  status: pending
+  content: P6 schema 還債：models 兩批 migrate（orders 一批 + products 一批）→ 付款失敗 services → 邏輯債（SKU/save）
+  status: completed
 - id: p7-staff-ia
   content: P7 客服／店務後台（IA 與權限已定名，實作最後做）
   status: pending
@@ -38,9 +38,9 @@ todos:
 isProject: false
 ---
 
-# shop 重整開工清單 v2.7
+# shop 重整開工清單 v3.0
 
-**開工令：P1–P3 閘門綠（9/3）。** 這份清單是開工順序與驗收標準，不是「先把表推倒」。**現行 blocking → P4**（Cart API：session 車、`variant_id`、禁止 GET 改狀態）。
+**開工令：P1–P6 閘門綠（9/13）。** **現行 blocking → P8 或 P7**：**M1 ✅（9/13 orders）**；**M2 ✅（9/13 products nullable）**；**邏輯債 ✅**：停 `Product.save()` base_price 覆寫、SKU `IntegrityError` + `transaction.atomic` 重試。**P6.1 核心已綠（9/12）**；**P6.2 orders 已綠（9/13）**；**P6 M2 + save 邏輯已綠（9/13）**：`products/migrations/0002_…` apply；shell 驗 base_price 不洗 variant 價；`manage.py test products carts orders` → **6/6 OK**。
 
 三件 v2 變更：
 
@@ -60,21 +60,29 @@ isProject: false
 
 **通關條件＝閘門綠 且 試錯覆蓋率 ≥ 2。**
 
-## repo 現況（9/3 已對帳）
+## repo 現況（9/13 P6 全段綠，已對帳）
 
 | 項目 | 實際情況 |
 | --- | --- |
 | Django 套件目錄 | `config/`（`ROOT_URLCONF = 'config.urls'`） |
 | 版本／資料庫 | Django 5.2 · **PostgreSQL**（`psycopg2-binary`，`.env` 提供 `DB_*`） |
 | 已裝 | `widget_tweaks`、`whitenoise`、`gunicorn`、`pillow`、`loguru`、`python-dotenv`、**`djangorestframework==3.18.0`**、**`django-cors-headers==4.9.0`** |
-| **未補** | —（P1.0 已補 DRF／CORS；P8 仍靠 `requirements.txt` 這兩行） |
-| 路由 | `config/urls.py` 掛了 `pages`、`products/`、`admin/`、`accounts/`、`carts/`、`orders/`、**`api/v1/` → `config.api_urls`**（`categories/`、`products/` 列表／詳情、`csrf/`、`auth/login/`、`auth/logout/`、`me/`） |
-| P1 落地檔 | `products/serializers.py`（含 `ProductDetailSerializer`）；`products/api_views.py`（`ProductDetailView`，`lookup_field='slug'`）；`config/api_urls.py`；`products/views.py` `SIZES_LIST` 已改 `2XL`／`3XL` |
-| P2 落地檔 | `frontend/`（Vite＋React）；`frontend/.env` `VITE_API_URL`；`src/api/client.js`（`apiFetch` 查 `response.ok`）；`ProductListPage`／`ProductDetailPage`（`variant_id`）；Router `/` 與 `/products/:slug` |
-| P3 落地檔 | `accounts/api_views.py`（`csrf_view`、`api_login`、`api_logout`、`me_view`）；`config/api_urls.py` 四條 auth 路由；`config/settings.py` 已有 `SessionAuthentication`／`CORS_ALLOW_CREDENTIALS` |
-| Git | 分支 `main`（與 `origin/main` 同步至 P1 merge 後）；P3 本 commit 含 `accounts/api_views.py`＋`api_urls` auth 路由。`frontend/` 仍可能未 commit |
-| 測試 | 六個 `tests.py` 全部是空殼 |
-| 前端 | **已有** `frontend/`（P2）；P3 後端閘門 Postman 綠；`:5173` 尚未接 `credentials: 'include'` 登入流程 |
+| 路由 | `config/urls.py` + **`api/v1/`**（catalog、cart CRUD、auth、`me/`、**orders GET+POST**、**orders/{order_no}/ GET**） |
+| P1–P4 落地檔 | 同 v2.9／9/8 紀錄 |
+| P5 落地檔 | **`orders/serializers.py`**、`orders/api_views.py`（201 後 session `cart.clear()` 仍保留；DB 清車已搬入 service） |
+| P5.5 落地檔 | **`products/tests.py`**（2）、**`carts/tests.py`**（2）、**`orders/tests.py`**（2）；`python manage.py test products carts orders` → **6/6 OK（9/11）**；**9/13** `test_checkout_returns_201_with_order_no` 仍綠 |
+| **P6.1 落地檔** | **`carts/models.py`**（`Cart`／`CartItem`）；**`carts/migrations/0001_initial.py`**；**`carts/services.py`**（`merge_session_cart_into_db`）；**`accounts/api_views.py`**（login merge + try/except）；**`accounts/views.py`**（register merge + try/except）；**`carts/cart.py`**（`clear()` pop 修復）；**`orders/services.py`**（`DBCart.items.all().delete()` 在 `@transaction.atomic` 內） |
+| **P6.1 merge 規則（已鎖）** | **逐項覆蓋**（session variant 蓋 DB 同 variant 數量）；合併時**不截庫存**（留購物車頁／結帳前擋）；登出 **DB 車保留**、session 車由 `logout()` flush |
+| **P6.2 M1 落地檔（9/13）** | **`orders/models.py`**（`fulfillment_status`／`internal_notes`／金額四欄；刪重複 `order_no` index）；**`orders/migrations/0002_remove_order_orders_orde_order_n_7a9a09_idx_and_more.py`** 已 apply |
+| **P6.2 付款／結帳邏輯（9/13）** | **`orders/serializers.py`**（`validate_card_cvc`／`validate_card_expiry`／`validate_card_number`）；**`orders/api_views.py`**（`invalid_card_number`／`card_declined` 400 + `reason`；`PaymentDeclinedError` → `detail` 為 dict）；**`orders/services.py`**（`place_order` 寫四欄金額；`PaymentDeclinedError` + 末四碼 `0002` 模擬拒絕 + rollback） |
+| **P6.2 契約（400 付款失敗）** | 輸入驗證：`invalid_card_number` 或 `card_declined` + `detail` dict；銀行拒絕：`card_declined` + `detail.card_number`；**皆不建 Order**（serializer 擋或 atomic rollback） |
+| **P6.2 舊單回填（策略 A）** | M1 前既有訂單：四金額欄 `0`、`fulfillment_status=unfulfilled`；`total` 保留原值；新單由 `place_order` 寫齊四欄 |
+| **P6 M2 落地檔（9/13）** | **`products/models.py`** — `Product.image`／`ProductImage.color` → `null=True, blank=True`；**`products/migrations/0002_alter_product_image_alter_productimage_color.py`** 已 apply |
+| **P6 邏輯債（9/13）** | **`Product.save()`** — 刪 `variants.all().update(price=base_price)`；shell 驗 `base_price+1` 後 variant 價不變。**`ProductVariant.save()`** — SKU 改 `IntegrityError` + `transaction.atomic()` 重試（無 `.exists()`）；`price` 補值在 `super().save()` 前 |
+| 非阻塞積壓 | Cart API 仍讀寫 session；`CartPage` 未做；P3 登入 `:5173` 仍未接；P5 Idempotency-Key 未做；P6.2 付款失敗自動化測試仍待補；`ProductImage.save()` 在 `color=None` 時 `alt_text` 可能含 `None` |
+| Git | 分支 **`feature/p6-order`** @ origin；本輪 commit M2 migration + models 邏輯債 + checklist／log |
+| 測試 | **`python manage.py test products carts orders` → 6/6 OK（9/13 P6 收尾）**；P6.2 付款失敗 Postman L3 |
+| 前端 | P2 列表／详页；P4 `:5173` 加购已绿；checkout React 頁未做 |
 
 ## 三個表面共用同一倉庫（不要為後台另起 Product 表）
 
@@ -151,7 +159,7 @@ flowchart TB
 
 - **動哪些檔**：`requirements.txt`、`config/settings.py`、`config/urls.py`，新建 `config/api_urls.py`
 - **契約**：`GET /api/v1/` → 200／405（不可以是 404）
-- **為什麼**：middleware 順序決定 header 誰先定稿；`/api/v1/` 是三個表面共用的海關，前綴先鎖死才不會之後改一百個 fetch
+- **為什麼**：middleware 順序決定 header 誰先定稿；`/api/v1/` 是三個表面共用的海關，前綴先鎖死才不會之後���一百個 fetch
 - **錯誤菜單**
   1. `corsheaders.middleware.CorsMiddleware` 排在 `CommonMiddleware` 之後 → 瀏覽器 CORS 失敗、curl／Postman 正常（**症狀不對稱**）。OPTIONS 預檢仍會 200＋ACAO（Cors 自己回，不能當自證）。真自證：關掉 Follow Redirects，`GET /api/v1`（無尾斜線）看 301 有沒有 `Access-Control-Allow-Origin`
   2. `rest_framework` 加進錯的清單（`INSTALLED_APPS` 是 `DJANGO_APPS + APPLICATION_APPS + THIRD_PARTY_APPS` 三段相加）→ browsable API 炸 `TemplateDoesNotExist`，純 JSON 反而活著
@@ -271,8 +279,10 @@ flowchart TB
   4. 庫存不足回 400 → 前端分不清「你填錯」與「我沒貨」，只能寫「發生錯誤」
   5. `quantity` 允許 0／負數／字串 → 負數量或 `TypeError`，P5 才爆
   6. 匿名車在登入後消失 → merge 規則未定（P6 才有 `Cart` 表；本階段寫死一種行為並記錄）
-- **L3 閘門**：加 2 件 → `PATCH` 成 5 件 → `GET` 數量一致；超賣回 409
-- **試錯覆蓋率**：0/6
+- **L3 閘門**：加 2 件 → `PATCH` 成 5 件 → `GET` 數量一致；超賣回 409 → **已綠（9/6–9/8）**：主序列 curl；409 `VID=6 PATCH 9999` → `available:10`；`:5173` 加购「共 1 件」
+- **試錯覆蓋率**：**2/6 通關**（#5 負數→400；#4 超庫存→409）
+- **落地檔**：後端 + 前端见 repo 現況；P4.0 deprecated 已標
+- **非阻塞**：`CartPage` 未做，不挡关闸
 
 ---
 
@@ -284,7 +294,13 @@ flowchart TB
 
 - `ValueError('Cart is empty')` → **400**（現行是 `redirect('carts:list')`）
 - `InsufficientStockError` → **409 ＋ `items` JSON**。現行做法是寫進 `request.session['order_failed_items']` 再 `redirect('orders:failed')`，失敗頁 `pop()` 出來 —— **API 不得沾 session**
-- 成功 → **201 ＋ `order_no`**，並在 service 回來之後才 `cart.clear()`
+- 成功 → **201 ＋ `order_no`**，清車分兩層（**9/12 已改寫**）：
+  - **DB 車**：`place_order` 的 `@transaction.atomic` 內 `DBCart.items.all().delete()` —— 失敗整筆 rollback。
+  - **Session 車**：`orders/api_views.py` 在 201 前獨立 `try/except` + `cart.clear()` —— 清 session 失敗**不得吃掉 201**（session 不在 DB 交易內）。
+- **冕等（防重複下單）分兩層，兩層都要做**（新增，9/10）：
+  - **後端**：`Idempotency-Key` header（前端每次進入結帳流程產生一個 uuid），命中已處理的 key 就直接回當初那筆 `order_no`，不重跑 `place_order`。最低限度替代方案：`cache.add(f'checkout-lock-{user.id}', True, timeout=5)` 擋同一使用者短時間重送。
+  - **前端**：`submitting` state → 送出中 `disabled` ＋ 按鈕文字換成「處理中…」＋ `finally` 復位；成功後 `navigate` 去訂單頁，不留在原表單。**先例已落地可照抄**：`ProductDetailPage.jsx` 的加購按鈕已用 `adding` state ＋ `disabled={!selectedVariant?.in_stock || adding}` ＋「加入中…」＋ `finally setAdding(false)`。React 結帳頁尚未建，這條契約先寫在此，建頁時一起做。
+  - ⚠ **前端那層只防手滑連點**，不防重新整理重送、兩個分頁、fetch 自動重試 → 後端那層不得省。
 
 待驗證（不確定，進 P5 第一件事就自証）：`services` 同時用 `select_related('product','color')` ＋ `select_for_update()`。若 `ProductVariant.color` 是 `null=True`，PostgreSQL 會因 LEFT OUTER JOIN 抱 `FieldError: FOR UPDATE cannot be applied to the nullable side of an outer join`。`carts/cart.py` 裡的 `if variant.color:` 曗示可能可空。**一行自証**：`python manage.py shell` 跑一次那個 queryset，有錯就當場看到。
 
@@ -297,8 +313,11 @@ flowchart TB
   3. 下單成功但沒清 session 車 → 使用者重新整理就再下一單
   4. `GET /orders/{order_no}/` 沒用 `get_queryset` 過濾 → 換一個 `order_no` 就看得到別人的單
   5. 錯誤用 `messages` ＋ redirect → fetch 拿到 302／200 HTML，前端寫不出錯誤處理
-- **L3 閘門**：下單 201 ＋ `order_no`；缺貨 409；用 B 帳號打 A 的 `order_no` → 403 或空
-- **試錯覆蓋率**：0/5
+  6. 送出按鈕沒 `disabled` → 雙擊就是兩張訂單、庫存扣兩次（`checkout.html` 的 `<button type="submit" form="checkout-form">` 已是實證，見「模板審查」第 7 項）
+  7. 只做前端 `disabled` 就當冕等做完了 → 重新整理重送／兩個分頁／fetch 自動重試照樣重複下單（**沉默失敗**：兩張單都成功，沒有任何錯誤日誌）
+  8. 把清車失敗當成下單失敗回 4xx／5xx → 訂單其實已 commit，使用者被誘導再下一單（與上方補償寫法對應）
+- **L3 閘門**：下單 201 ＋ `order_no`；缺貨 409；用 B 帳號打 A 的 `order_no` → 403 或空 → **9/11 綠**（Postman：201／400 空車／admin GET 他人 order_no → 404；详情 JSON 含 items/payment）
+- **試錯覆蓋率**：**2/8 通關**（#3 下单后 GET cart 空；#4 B 账号查 A 的 order_no → 404）。shell 自証 `select_for_update` 无 FieldError（9/10）
 
 ---
 
@@ -306,7 +325,7 @@ flowchart TB
 
 舊版在 P6 寫「有 P1–P5 測試護欄之後」，卻沒有任何階段負責寫測試。這一階就是它。
 
-- **動哪些檔**：`products/tests.py`、`carts/tests.py`、`orders/tests.py`（現在全空）
+- **動哪些檔**：`products/tests.py`、`carts/tests.py`、`orders/tests.py`（**9/11 已落地各 2 測試**）
 - **最小三個測試**
   1. `GET /api/v1/products/` → 200 且 `results` 是 `list`；下架商品不在裡面
   2. `POST /api/v1/cart/items/` → 缺 `variant_id` 400；超庫存 409
@@ -316,8 +335,8 @@ flowchart TB
   1. 測試沒建資料就断言數量 → 永遠綠的假測試（**最危險**）
   2. 用真實 DB 而非測試 DB → 資料被洗掉
   3. 測試裡直接改 `stock` 不經 API → 測到的不是契約
-- **L3 閘門**：挑一行正確邏輯改壞 → 測試真的轉紅 → 改回來→ 綠
-- **試錯覆蓋率**：0/3
+- **L3 閘門**：挑一行正確邏輯改壞 → 測試真的轉紅 → 改回來→ 綠 → **9/11 綠**（`python manage.py test products carts orders -v 2` → 6/6 OK）
+- **試錯覆蓋率**：手測寫測試踩 `#1` 假綠（下架未建仍 assertNotIn）、`assertInstance` typo、`UniqueViolation` 重复 slug
 
 ---
 
@@ -347,22 +366,42 @@ flowchart TB
 
 仍不重寫 Product 主檔，只補／拆該補的。
 
-1. **`Cart` ＋ `CartItem` 表從零建**：`carts/models.py` 現在是 57 bytes 空檔，購物車 100% 在 session。同理 `accounts/models.py` 也是空檔，`UserProfile` 全在 `users/models.py`，所以第 7 項 accounts/users 合併難度遠低於預估，可降為非阻塞。登入 merge 規則寫死一種（加總或覆蓋）
-2. **訂單狀態拆兩條線**：`Payment` 已經存在（OneToOne、`transaction_id`、`card_last_four`、`paid_at`），但 `status` 的 `failed` 是**死枝** —— `services` 一律寫 `success` 並無條件把 `order.status` 設成 `paid`。本項要做兩件：（a）新增 `fulfillment_status`（`unfulfilled`／`shipped`／`delivered`），因為 `Order.status` 是付款欄不是出貨欄；（b）讓付款真的有失敗路徑，否則「`Payment` 是付款真相」只是口號。**P7 的客服在本項完成前絕對不得寫 `Order.status`。**
-3. **停掉 `Product.save()` 的價格覆蓋**（現行：`self.variants.all().update(price=self.base_price)`）。**必須先選一個回填策略**：
-   - A：凍結現值（不動現有 `price`，之後改 `base_price` 不影響 variant）
-   - B：一次性回填（把 `price IS NULL` 的補成 `base_price`，其餘保留）
-   - C：加 `price_override` 旗標，只有未覆寫的跟著 `base_price`
-   - 附帶風險：`update()` 繞過 `ProductVariant.save()`，所以 SKU 自動生成、`price` 補值都沒跑過 → 可能已經有 `price IS NULL` 的髒資料，先清點再改
-4. **SKU 唯一性**：現行 `while ProductVariant.objects.filter(sku=...).exists()` 併發下仍會撞 `IntegrityError`；改成依賴 DB unique ＋ 撞到再試
-5. **封面單一來源**：`ProductImage` 的 cover 或最小 `display_order`；再考慮把 `Product.image` 改 `null=True, blank=True` 然後移除（現在是**必填**）
-6. **`ProductImage.color` 必填**：沒綁顏色的通用圖目前存不進去 → 改 `null=True, blank=True` 或新增「通用」顏色
-7. **`accounts` vs `users` 合併**（views 在 `accounts`、model 在 `users`）
-8. 收藏 M2M 可改 through（加 `created_at`）；**非阻塞項**
+### P6 Models 批次計畫（9/13 鎖定：盡量一次做完）
+
+**原則**：凡要 `makemigrations` 的欄位，**整批寫進同一個 `models.py`、只 migrate 一次**；純邏輯（`save()`、`place_order`、serializer）跟該批 migration **同一段坐下時間**做完，但**不**為邏輯單開 migration。P6 全段目標：**2 次 migrate**（`orders` 一批 ＋ `products` 一批）。
+
+| 批次 | 檔案 | migration | 欄位／索引 | 對應清單項 |
+| --- | --- | --- | --- | --- |
+| **M1** ✅ **9/13** | `orders/models.py` | `orders/migrations/0002_remove_order_orders_orde_order_n_7a9a09_idx_and_more.py` | `fulfillment_status`（`unfulfilled`／`shipped`／`delivered`，預設 `unfulfilled`）；`internal_notes`（`TextField` blank，**P7 客服備註預置**）；`subtotal`／`shipping_fee`／`tax`／`discount_amount`（`DecimalField`，預設 `0`；**舊單策略 A 已記 log**）；**刪** `Meta.indexes` 裡重複的 `order_no` Index | #2a、升級表金額拆欄、P7 備註、小債 #11 |
+| **M2** ✅ **9/13** | `products/models.py` | `products/migrations/0002_alter_product_image_alter_productimage_color.py` | `Product.image` → `null=True, blank=True`；`ProductImage.color` → `null=True, blank=True` | #5（第一步）、#6 |
+| **—** ✅ **orders 邏輯 9/13** | 不 migrate | — | #2b 付款失敗：**方向 B**——末四碼 `0002` → `PaymentDeclinedError` + `@transaction.atomic` rollback（**不持久化** failed Payment／Order；API 400 `reason: card_declined`）；serializer 層 CVC／expiry 400 亦不建 Order；#3 回填策略 **鎖 A** | #2b、#3 |
+| **—** ✅ **products 邏輯 9/13** | 不 migrate | — | #3 停 `Product.save()` base_price 覆寫；#4 SKU `IntegrityError` + `transaction.atomic()` 重試（無 `.exists()`） | #3、#4 |
+| **延後** | — | 第三批或 P9 | #5 **移除** `Product.image`（須先資料遷移）；#7 accounts/users 合併（搬檔，schema 不動）；#8 收藏 through（加 `created_at`） | 非阻塞 |
+
+**施工順序（blocking 路徑）**：~~M1 migrate~~ ✅ → ~~改 `place_order`（金額四欄、付款失敗分支）~~ ✅ **9/13** → ~~M2 migrate~~ ✅ → ~~改 `Product.save()`／`ProductVariant.save()`~~ ✅ → ~~`python manage.py test products carts orders` 仍 6/6 綠~~ ✅ **9/13** → **P6 全段 L3 通關**。
+
+**不要做的事**：每加一個欄位就 `makemigrations` 一次；在 M1 還沒跑完就改 M2；把 serializer 卡號 400 當成 P6.2 的「付款失敗」（那是 P5 輸入驗證，不寫 DB）。
+
+1. **`Cart` ＋ `CartItem` 表從零建**：**9/12 核心已綠**。`carts/models.py` 已建表 + migrate；`accounts/models.py` 仍空（第 7 項 accounts/users 合併仍非阻塞）。**merge 規則已鎖：逐項覆蓋**（非加總）
+   - **模型分工鎖定**：訪客 = `session['carts']`（沿用現行 `carts/cart.py`）；已登入 = `Cart`／`CartItem` 表。結帳本來就 `IsAuthenticated`，所以下單路徑一律走 DB 車。
+   - **merge 觸發點有兩個，不是一個**：登入**與註冊完成（自動登入）都要 merge**。三處舊條文都只寫「登入時合併」，註冊那條路徑最容易漏測 → 症狀是「註冊前加的商品憑空消失」。
+   - **merge 規則要連「合併後超庫存」一起決定**：session 車 3 件 ＋ DB 車 4 件、庫存只有 5 件時，要當場擋、截到庫存上限、還是讓它進車等結帳才 409？「加總 vs 覆蓋」只是第一層，這個才是上線後真正會爆的那層。決定後寫進 log。
+   - **登出行為也寫死一種**：DB 車保留（下次登入還在）、session 車清空。不寫下來的話「登出後購物車還在」會被當成 bug 重複調查。
+   - **本項最大的收益不是持久化，是原子性**（新增，9/10 討論結論）：`cart.clear()` 目前住 session、訂單住 DB，**跨儲存裝置的一致性在原理上做不到**，所以「訂單成功但購物車沒清空」無法用 View 的 `try/except` 解決。Cart 表落地後，`cart.items.all().delete()` 可以搬進 `place_order` 的 `@transaction.atomic` 內 → 清車失敗就整筆 rollback，該狀態**結構性消失**。順帶消滅 session「整包讀→改→整包寫回」造成的併發復活（另一個分頁把舊車蓋回來，`clear()` 明明成功購物車卻還在）。
+   - **反向索引**：**9/12 已改寫** —— DB 清車在 `place_order` transaction 內；session `cart.clear()` 仍留 view 層 try/except。
+   - **P6 之前 session 版還會活著，順手修兩處**：**9/12 已修** —— `carts/cart.py::clear()` 改 `pop` + 重設 `self.carts = self.session['carts'] = {}`。
+   - **仍待做（非阻塞本項核心）**：`carts/api_views.py` 已登入時改讀寫 DB 車（目前仍 session）。
+2. **訂單狀態拆兩條線**（**M1 ＋ services，不拆成兩次 migrate**）：**9/13 已綠**。（a）**M1** ✅：`fulfillment_status` ＋ `internal_notes` ＋ 金額四欄；migrate `0002` 已 apply。（b）**付款失敗** ✅ **方向 B**：輸入驗證（CVC／expiry／卡號格式）→ serializer 400 + `reason`，不進 `place_order`；模擬銀行拒絕（Stripe 測試卡末四碼 `0002`）→ `PaymentDeclinedError` + rollback，**DB 不留 failed 列**；API 400 `card_declined` + `detail` dict（與 serializer 同形）。成功路徑仍寫 `Payment.status='success'`、`order.status='paid'`。**P7 客服改 `fulfillment_status`／`internal_notes`，不得寫 `Order.status` 當出貨。**
+3. **停掉 `Product.save()` 的價格覆蓋**（**M2 後、邏輯-only**；回填策略 **已鎖 A**）：**9/13 已綠** — 刪 `self.variants.all().update(price=self.base_price)`；shell 驗 `base_price+1` 後 variant 價不變（49.90/49.90）。
+4. **SKU 唯一性**（**邏輯-only，M2 同段**）：**9/13 已綠** — `while exists()` 改 `IntegrityError` + `transaction.atomic()` 重試；`price` 補值在 `super().save()` 前；`sku` 已有 `unique=True`，**不動 model**。
+5. **封面單一來源**（**M2 只做 nullable**）：**9/13 M2 已綠** — `Product.image` → `null=True, blank=True`；cover 邏輯用最小 `display_order` 或 serializer，**刪** `Product.image` 欄延後（須資料遷移）。
+6. **`ProductImage.color` 必填**（**M2 同批**）：**9/13 M2 已綠** — 改 `null=True, blank=True`（不新增「通用」顏色，少一張表）。
+7. **`accounts` vs `users` 合併**（**延後**；views 在 `accounts`、model 在 `users`）—— 搬檔即可，schema 不動。
+8. 收藏 M2M 可改 through（加 `created_at`）；**延後至 P9 或 P6 第三批**
 9. Size 維持 choices，不拆 app（但 `views.py` 的 `XXL` 不一致已在 P1.3 修掉）
 10. `Category.parent` 與 `Product.category` 的 `PROTECT` 是設計，不是 bug，不要改成 `CASCADE`
 
-- **L3 閘門**：每一項改完，P5.5 三個測試仍綠；回填策略有一行寫進 log
+- **L3 閘門**：**9/13 綠** — M1 ＋ M2 兩批 migrate 都跑完 ＋ `place_order` 付款失敗路徑可測 ＋ P5.5 六測試仍綠（6/6 OK）；回填策略 A 已記 log
 
 ---
 
@@ -370,9 +409,9 @@ flowchart TB
 
 **v2.3 併入**：舊清單「自訂 Admin 強化」整類作廢，內容歸入本階段。理由：Django Admin 沒有欄位級權限、沒有稽核日誌、沒有審批流。給客服 `is_staff` 就等於給他改 `OrderItem` 快照價格的權力，而快照被改，歷史帳就永久失真。裝套件美化 Admin 是把錢花在錯的層。
 
-第二個 SPA 或同一 `frontend/` 的 `/staff/*`。權限：`is_staff` ＋ 兩組（客服／店務）。在 P6 出貨欄存在之前，**不要**讓客服寫入 `Order.status` 當成出貨（會污染付款狀態）。過渡期繼續 Django Admin。
+第二�� SPA 或同一 `frontend/` 的 `/staff/*`。權限：`is_staff` ＋ 兩組（客服／店務）。在 P6 出貨欄存在之前，**不要**讓客服寫入 `Order.status` 當成出貨（會污染付款狀態）。過渡期繼續 Django Admin。
 
-**客服畫面**：訂單搜尋（`order_no`／email／phone）；訂單詳情（快照明細**唯讀**，可改出貨狀態、內部備註）；會員卡（電話、積分、最近訂單）。**不能**改歷史單價、**不能**刪 `OrderItem`、**不能**改 `Payment.transaction_id`。
+**客服畫面**：訂單搜尋（`order_no`／email／phone）；訂單詳情（快照明細**唯讀**，可改 **`fulfillment_status`／`internal_notes`**—— 兩欄已在 **P6 M1** 預置，P7 只開 API 不另加 migration）；會員卡（電話、積分、最近訂單）。**不能**改歷史單價、**不能**刪 `OrderItem`、**不能**改 `Payment.transaction_id`。
 
 **店務畫面**：商品上／下架（`is_active`）；主檔 ＋ variant 庫存／價／SKU；分類樹、顏色、多圖；低庫存列表（`ProductVariant.stock`）。**不能**改已成立訂單的快照欄位。
 
@@ -405,10 +444,38 @@ flowchart TB
 | 9/3 | P3 | — | login 到 `/me/` | `403 Authentication credentials were not provided.` | 帳密 POST 到 `/me/` 而非 `/auth/login/` | 改 POST `/auth/login/`，me 用 GET |
 | 9/3 | P3 | — | GET logout | `405 Method not allowed` | `api_logout` 只收 POST | 改 POST `/auth/logout/` |
 | 9/3 | P3 | — | `Client.post` | `DisallowedHost: testserver` | `ALLOWED_HOSTS` 無 `testserver` | shell 手測改用 `RequestFactory` |
+| 9/5 | P4 | #5 | `quantity=-999` → 400 | `{"quantity":["Ensure this value is greater than or equal to 1."]}` + HTTP 400 | `CartItemWriteSerializer` `min_value=1` | serializer 層擋下，未進 `cart.add()` |
+| 9/5 | P4 | — | `Response(..., status.HTTP_400)` | HTTP 200 + body 含 400 常數 | `status=` 關鍵字漏寫 | 改 `status=status.HTTP_400_BAD_REQUEST` |
+| 9/5 | P4 | — | POST 累加庫存檢查失效 | 第二次加同款未 409 | `cart.carts.get(..., 'quantily', 0)` key 拼錯 | 改 `'quantity'` |
+| 9/5 | P4 | — | PATCH 500 | `TypeError: add() got an unexpected keyword argument 'vatiant'` | `cart.add(vatiant=...)` 拼錯 | 改 `variant=`（log 更新時已修） |
+| 9/6 | P4 | — | L3 主序列 | POST 201 qty2→PATCH 200 qty5→GET total 5→DELETE 204→GET 空 | 同一 `cart.jar` session | 後端 cart CRUD 契約通 |
+| 9/6 | P4 | — | DELETE 後 PATCH 9999 | HTTP 404 `Item not in cart` | 車已空仍測超庫存 | 須在 POST 加件後、DELETE 前測 409 |
+| 9/7 | P4 | — | 前端 error 只有字串 | 409 時 UI 拿不到 `available` | `throw new Error` 未掛 `status`/`body` | `cartFetch` 改 `error.status`、`error.body` |
+| 9/8 | P4 | #4 | 超庫存 → 409 | `Insufficient stock` + `available:10` + HTTP 409 | PATCH `quantity:9999` 超 `variant.stock` | 車內 POST 後 PATCH；非 DELETE 後 |
+| 9/8 | P4 | — | `:5173` 加购 | 「已加入購物車（共 1 件）」variant_id 6 | `addToCart` + csrf cookie | `ProductDetailPage` 按钮侧 |
+| 9/8 | P4 | — | P4.0 | `carts_add` docstring DEPRECATED | 新 API 不得 GET 改 session | `carts/views.py` 已標 |
+| 9/10 | P5 | — | shell 裸跑 select_for_update | `TransactionManagementError: select_for_update cannot be used outside of a transaction` | 未包 `transaction.atomic()` | 包 `with transaction.atomic():` 自証通过 |
+| 9/10 | P5 | — | Postman login 403 | `CSRF cookie not set` | 只送 X-CSRFToken、未送 Cookie | 手动 Cookie + X-CSRFToken；login 后再 GET csrf |
+| 9/11 | P5 | #3 | 下单后 cart | GET cart 空 | 201 后 cart.clear() | Postman L3 绿 |
+| 9/11 | P5 | #4 | admin 查他人单 | 404 `No Order matches the given query` | get_queryset filter user | Postman + orders test 绿 |
+| 9/11 | P5.5 | #1 | 下架 assertNotIn | 假绿（setUp 未建下架商品） | 只 assert 不存在的名 | setUp 补 inactive product |
+| 9/11 | P5.5 | — | products test ERROR | `AttributeError: assertInstance` | 方法名 typo | 改 `assertIsInstance`；`result`→`results` |
+| 9/11 | P5.5 | — | carts test ERROR | `IntegrityError duplicate slug test-cat` | setUp 与 test 各调 _make_variant | 409 test 改用 self.variant |
+| 9/12 | P6.1 | — | merge 前 migrate | `ProgrammingError: relation "carts_cart" does not exist` | model 寫了未 migrate | `makemigrations carts` + `migrate` |
+| 9/12 | P6.1 | — | 假 merge 測試 | `ProductVariant.DoesNotExist` | `.get()` 未 try/except | `except` + `logger.warning` + `continue` |
+| 9/12 | P6.1 | — | loguru 格式 | log 印出字面 `%s` | `logger.exception('... %s', x)` 非 loguru 語法 | 改 f-string |
+| 9/12 | P6.1 | — | 連續 clear | 第二次 `KeyError` | `del session['carts']` | `pop` + 重設 `{}` |
+| 9/13 | P6.2 | — | `fr'^\d{3,4}$'` CVC 永遠不匹配 | 驗證失效或 `re.error` | f-string 把 `{3,4}` 當運算式 | 改 `r'^\d{3,4}$'` |
+| 9/13 | P6.2 | — | `05/28` expiry 400 格式錯 | 只有 10–12 月能過 | `EXPIRY_PATTERN` 括號位置錯 | 改 `r'^(0[1-9]|1[0-2])/(\d{2})$'` |
+| 9/13 | P6.2 | — | 任意卡結帳 500 | `TypeError: 'dict' object is not callable` | `payment_data('card_last_four')` | 改 `payment_data.get('card_last_four')` |
+| 9/13 | P6.2 | — | 末四碼 0002 仍建 Order | Postman 400 + count 不變 | `@transaction.atomic` rollback | 預測驗證通過 |
+| 9/13 | P6.2 | — | 銀行拒絕 detail 字串 | 前端讀 `detail.card_number` undefined | `detail` 型別不一致 | 改 dict `{'card_number': [...]}` |
+| 9/13 | P6 | — | `ProductVariant.save()` price 在 return 後 | 新 variant 可能 `price=None` 存 DB | `price` 補值放在 `super().save()` 之後且新 sku 路徑 `return` 提前跳出 | 搬 `price` 初始化到方法最開頭 |
+| 9/13 | P6 | — | 預測 base_price 改動不洗 variant | shell `49.90 49.90` | 刪 `update(price=base_price)` 後行為符合預期 | 預測驗證通過 |
 
 範例（寫成這樣）：`8/28 ｜ P1.0 ｜ #3 ｜ 預測 405 ｜ 404 Not Found ｜ config/urls.py 沒 include api_urls ｜ 加 path('api/v1/', include('config.api_urls'))`
 
-統計：P1.0 菜單 2/6；P3 菜單 3/5 + 手測 2 項。P3 階段試錯 ≥2，通關。
+統計：P1.0 菜單 2/6；P3 菜單 3/5 + 手測 2 項。**P4 菜單 2/6 通關**。**P5 菜單 2/8 通關**。**P5.5 L3 通關（9/11，6 tests）**。**P6.1 試錯 4 項**。**P6.2 試錯 5 項**。**P6 M2+邏輯 試錯 2 項（9/13）**。**M1 ✅；M2 ✅；P6 全段 L3 ✅**。blocking → **P8 或 P7**。
 
 ---
 
@@ -465,7 +532,7 @@ flowchart TB
 
 ### P6 新增三項小債（非阻塞，但已入帳）
 
-11. **`Order.Meta.indexes` 重複索引**：`order_no` 已經 `unique=True`（自帶索引），卻又加了 `models.Index(fields=['order_no'])`。寫入要維護兩張索引，白付一份。
+11. **`Order.Meta.indexes` 重複索引**：`order_no` 已經 `unique=True`（自帶索引），卻又加了 `models.Index(fields=['order_no'])`。寫入要維護兩張索引，白付一份。**併入 P6 M1 順手刪**。
 12. **`points` 用 `int(total)` 累積**：`99.90` → 99，小數默默不見；且假付款也會給點。
 13. **`OrderItem.order` 的注釋與程式碼相反**：寫 `PROTECT` 但注釋寫「訂單刪除時，明細一併刪除」（那是 CASCADE）。實際後果：Admin 刪訂單吃 `ProtectedError`。**保留這個錯当 P5.5 的教材**：寫一個測試去刪訂單，看它抱什麼，從此學一件事 —— 注釋不是權威，`on_delete` 才是。
 
@@ -513,7 +580,7 @@ flowchart TB
 
 ## 模板帶來的契約補充（P1.1／P1.2／P1.3／P4／P5 必讀）
 
-這一節是模板逆推出來的，比我原本寫的契約精確。**API 要能餧活現有畫面，不是另發明一套。**
+這一節是模板逆推出來���，比我原本寫的契約精確。**API 要能餧活現有畫面，不是另發明一套。**
 
 ### P1.1 categories
 側欄需要 `total_product_count`（主分類含子分類彙總）與 `sub_product_count`，且每個主分類要帶 `sub_categories`。**計數一律用 `annotate(Count(...))` 一次打完**，不得像現在這樣在模板層一條一條 `.count()`。
@@ -544,9 +611,9 @@ flowchart TB
 |---|---|---|
 | 購物車價格快照 | P4 | `__iter__` 現在取即時 `variant.final_price`。客人購物車里的金額會因為你改價而當場跳動 |
 | 寫入動詞改 POST ＋ 後端數量驗證 | P4 | 含上述 1／2／3 三個真 bug。GET 改狀態拿不到 CSRF 保護 |
-| `Order` 金額拆四欄 `subtotal`／`shipping_fee`／`tax`／`discount_amount` | P6 | **舊清單最有商業眼光的一項。** `total` 現在是黑盒，客服對不了帳、退款算不出金額 |
-| `fulfillment_status` | P6 | `Order.status` 只有 pending／paid／failed／cancelled，全部是付款。現在這個站能收錢，不能出貨 |
-| `place_order` 冕等鍵 | P5 | checkout modal 可雙擊，實證可重複下單 |
+| `Order` 金額拆四欄 `subtotal`／`shipping_fee`／`tax`／`discount_amount` | P6 **M1** | **舊清單最有商業眼光的一項。** `total` 現在是黑盒，客服對不了帳、退款算不出金額；與出貨欄**同批** migrate |
+| `fulfillment_status` | P6 **M1** | `Order.status` 只有 pending／paid／failed／cancelled，全部是付款。現在這個站能收錢，不能出貨；與金額四欄**同批** migrate |
+| `place_order` 冕等鍵（後端 key ＋ 前端 `disabled` 兩層） | P5 | checkout modal 可雙擊，實證可重複下單。**前端層**：React 結帳頁尚未建，契約已補進 P5；`ProductDetailPage.jsx` 加購按鈕的 `adding` state 是可照抄的先例 |
 | `.env.example` ＋ 環境紀律 | P8 | `.env` 寫法是 `KEY = 'value'`，`python-dotenv` 幫你 strip，`docker compose` 不一定 |
 
 ## 作廢的两整類
@@ -654,3 +721,13 @@ flowchart TB
 9. **8/31**：P1.3 閘門綠（curl 詳情 JSON；404 邊界通）。試錯 0/5 → L3（脆）。`SIZES_LIST` 已修。`p1-catalog-api` → **completed**；commit `99e1b8d` push `origin/feature/p1-catalog-api`。blocking → **P2**。
 10. **9/2**：P2 閘門綠（`:5173` 列表真商品；詳情對出 `variant_id`）。菜單 #1 真踩；其餘未踩 → L3（脆）。`p2-storefront` → **completed**。blocking → **P3**。
 11. **9/3**：P3 閘門綠（Postman 五步：csrf→login→me 200→logout→me 403）。試錯 3/5 + 手測 2 項 → **L3 通關**。`p3-auth` → **completed**。blocking → **P4**。
+12. **9/5**：P4 開工（約 1/2 段）。落地 `carts/serializers.py`、`carts/api_views.py`（GET／POST／PATCH）、`config/api_urls.py` cart 三路由。L3 部分綠：空車 GET 200、`quantity=-999` → 400。試錯 1/6（#5）。`p4-cart` → **in_progress**。下一刀：`DELETE` + L3 全序列 curl + P4.0 deprecated。
+13. **9/6–9/7**：P4 後端 DELETE + L3 主序列 curl 綠；`client.js` `cartFetch` + 四函式 + 結構化 error。409 試錯 #4 與詳頁按鈕待做。`p4-cart` 仍 **in_progress**。
+14. **9/8**：P4 閘門綠。409 curl（#4）+ `:5173` 加购 + P4.0 deprecated。试錯 2/6 通關。`p4-cart` → **completed**。blocking → **P5**。
+15. **9/10**：讀 `orders/api_views.py`／`services.py`／`carts/cart.py` 真碼審查，四項結論入檔：（a）`'datail'` 錯字已修；（b）**「訂單成功但購物車沒清空」的根因是跨儲存裝置（session vs DB）無法共用交易，View 的 `try/except` 原理上解不了**，真正失敗點在 `SessionMiddleware.process_response` 寫入階段（View 之後，拓不到）加上併發整包覆寫 → 決定以 P6 第 1 項（Cart 表 ＋ 清車進交易）作為根本解；（c）`place_order` 的 `@transaction.atomic` ＋ `select_for_update()` 已讀碼確認無誤；（d）P6 第 1 項擴寫七條（訪客 session／登入 DB 分工、登入**與註冊**兩個 merge 觸發點、合併後超庫存規則、登出行為、原子性收益、P5 契約反向索引、session 版 `clear()` 順手修）。冕等清點：**後端 key 層未做**（仍在 P5）；**前端層加購按鈕已做**（`ProductDetailPage.jsx` 的 `adding` ＋ `disabled` ＋ `finally` 復位），但**結帳頁尚未建、契約原本不存在** → 已寫進 P5 契約＋錯誤菜單 #6／#7／#8＋升級表。
+16. **9/10–9/11**：**P5 閘門綠**。Postman：csrf→login→cart→POST orders 201→空车 400；GET list/detail；admin 查他人 order_no → 404。落地 `OrderListCreateView`、`OrderDetailView`、三層 detail serializers。`select_for_update` shell 自証 OK。试錯 2/8。
+17. **9/11**：**P5.5 閘門綠**。`products`／`carts`／`orders` 各 2 測試；`manage.py test products carts orders` → 6/6 OK。blocking → **P6**。
+18. **9/12**：**P6.1 核心綠**。落地 `carts/models.py`／`migrations/0001_initial.py`／`carts/services.py`（merge）；`accounts/api_views.py` + `accounts/views.py`（login／register merge + try/except）；`carts/cart.py::clear()` pop 修復；`orders/services.py` 內 `DBCart.items.all().delete()`。merge 規則鎖定：逐項覆蓋、合併不截庫存、登出 DB 車保留。shell 驗 merge／api_login／double clear。blocking → **P6.2**（`fulfillment_status`）。
+19. **9/13**：**P6 models 批次鎖定**。凡 schema 變更壓成 **2 次 migrate**（M1 `orders`：出貨＋備註＋金額四欄＋刪重複索引；M2 `products`：image/color nullable）。#3 回填策略鎖 **A**；#4／#2b 歸 logic-only；#5 刪欄／#7 合併／#8 through **延後**。施工順序 M1→services→M2→save() 邏輯。
+20. **9/13**：**P6.2 orders 半綠**。M1 migrate `0002` apply；`place_order` 金額四欄；卡驗證 400（`invalid_card_number`／`card_declined`）；方向 B 銀行拒絕（`0002`）Postman L3 + rollback；`test_checkout_returns_201` 仍綠。試錯 5 項。blocking → **M2 + Product save 邏輯**。
+21. **9/13**：**P6 全段 L3 通關**。M2 `products/migrations/0002_…` apply（`Product.image`／`ProductImage.color` nullable）；停 `Product.save()` base_price 覆寫；SKU `IntegrityError` + `transaction.atomic()` 重試；shell 驗 variant 價不跟 base_price 跳；`manage.py test products carts orders` → 6/6 OK。`p6-schema-debt` → **completed**。blocking → **P8 或 P7**。
