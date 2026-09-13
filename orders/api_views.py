@@ -11,6 +11,8 @@ from .serializers import CheckoutWriteSerializer, OrderListSerializer, OrderDeta
 from .models import Order
 
 logger = logging.getLogger(__name__)
+CARD_NUMBER_FIELDS = {'card_number'}
+CARD_DECLINED_FIELDS = {'card_cvc', 'card_expiry'}
 
 class OrderListCreateView(ListAPIView):
     serializer_class = OrderListSerializer
@@ -22,6 +24,20 @@ class OrderListCreateView(ListAPIView):
     def post(self, request):
         serializer = CheckoutWriteSerializer(data=request.data)
         if not serializer.is_valid():
+            errors = serializer.errors
+            error_fields = errors.keys()
+
+            if CARD_NUMBER_FIELDS & error_fields:
+                return Response(
+                    {'reason': 'invalid_card_number', 'detail': errors},
+                    status=status.HTTP_400_BAD_REQUEST,
+                )
+
+            if CARD_DECLINED_FIELDS & error_fields:
+                return Response(
+                    {'reason': 'card_declined', 'detail': errors},
+                    status=status.HTTP_400_BAD_REQUEST,
+                )
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
         cart = Cart(request)
@@ -39,6 +55,14 @@ class OrderListCreateView(ListAPIView):
             return Response(
                 {'reason': 'stock', 'items': e.items},
                 status=status.HTTP_409_CONFLICT,
+            )
+        except services.PaymentDeclinedError:
+            return Response(
+                {
+                    'reason': 'card_declined', 
+                    'detail': {'card_number': ['Payment was declined by issuer.']},
+                },
+                status=status.HTTP_400_BAD_REQUEST,
             )
         except ValueError:
             return Response({'detail': 'Cart is empty'}, status=status.HTTP_400_BAD_REQUEST)

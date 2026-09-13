@@ -113,5 +113,6 @@ class Cart:
 
     def clear(self):
         # 清空整台購物車
-        del self.session['carts']
+        self.session.pop('carts', None)
+        self.carts = self.session['carts'] = {}
         self.save()        

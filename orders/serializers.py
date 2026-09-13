@@ -1,5 +1,12 @@
+import re
 from rest_framework import serializers
+from datetime import date
+from django.utils import timezone
+from calendar import monthrange
 from .models import Order, OrderItem, Payment
+
+CVC_PATTERN = re.compile(r'^\d{3,4}$')
+EXPIRY_PATTERN = re.compile(r'^(0[1-9]|1[0-2])/(\d{2})$')
 
 class CheckoutWriteSerializer(serializers.Serializer):
     full_name = serializers.CharField(max_length=150)
@@ -31,6 +38,25 @@ class CheckoutWriteSerializer(serializers.Serializer):
             'phone': data['phone'],
             'address': data['address'],
         }
+
+    def validate_card_cvc(self, value):
+        if not CVC_PATTERN.fullmatch(value):
+            raise serializers.ValidationError('CVC 格式錯誤,需為 3-4 碼數字')
+        return value
+    
+    def validate_card_expiry(self, value):
+        match = EXPIRY_PATTERN.fullmatch(value)
+        if not match:
+            raise serializers.ValidationError('格式需為 MM/YY，例如 09/28。')
+    
+        month, yy = int(match.group(1)), int(match.group(2))
+        year = 2000 + yy
+        last_day = monthrange(year, month)[1]
+        expiry_date = date(year, month, last_day)
+
+        if expiry_date < timezone.now().date():
+            raise serializers.ValidationError('這張卡已過期。')
+        return value
 
 class OrderListSerializer(serializers.ModelSerializer):
     class Meta:

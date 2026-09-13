@@ -5,31 +5,32 @@ from django.utils import timezone
 from products.models import ProductVariant  
 from users.models import UserProfile 
 from .models import Order, OrderItem, Payment  
+from carts.models import Cart as DBCart
 
-
+DECLINED_CARD_LAST_FOUR = '0002' 
 
 class InsufficientStockError(Exception):
     def __init__(self, message, items=None):
-        super().__init__(message)  # 呼叫父類 Exception 的 __init__，設定錯誤訊息
-        # 避免直接傳入 None 在for時出錯,在None時傳入空列表
+        super().__init__(message)  
         self.items = items or []
+
+class PaymentDeclinedError(Exception):
+    def __init__(self, message):
+        super().__init__(message)
 
 
 def generate_order_no():
     return f"ORD-{timezone.now().strftime('%Y%m%d')}-{str(uuid.uuid4().int)[-12:]}"
 
 
-@transaction.atomic  # 確保全成功
+@transaction.atomic  
 def place_order(user, cart, shipping_data, payment_data):
     cart_items = list(cart)
     if not cart_items:
-        # 購物車空卻按結帳 → 直接擋下，不讓流程往下走
         raise ValueError('Cart is empty')
 
-    # 收集購物車裡所有 variant 的 id
     variant_ids = [item['variant'].id for item in cart_items]
 
-    # 一次撈出所有 variant，並做成 {id: variant} 的字典方便查表
     variants = {
         v.id: v
         for v in ProductVariant.objects.select_related('product', 'color')  
@@ -47,11 +48,10 @@ def place_order(user, cart, shipping_data, payment_data):
                 'available': variant.stock if variant else 0,  
             })
 
-    # 若有任何缺貨項目，一次拋出例外，帶上完整缺貨清單
     if insufficient:
         raise InsufficientStockError('Insufficient stock', insufficient)
 
-    total = Decimal('0.00')
+    order_subtotal = Decimal('0.00')
     order = Order.objects.create(
         user=user,
         order_no=generate_order_no(),
@@ -61,7 +61,11 @@ def place_order(user, cart, shipping_data, payment_data):
         email=shipping_data['email'],
         phone=shipping_data['phone'],
         address=shipping_data['address'],
-        total=Decimal('0.00'),   
+        total=Decimal('0.00'),
+        subtotal=Decimal('0.00'),   
+        shipping_fee=Decimal('0.00'),
+        tax=Decimal('0.00'),
+        discount_amount=Decimal('0.00'),
         status='pending',         
     )
 
@@ -69,8 +73,8 @@ def place_order(user, cart, shipping_data, payment_data):
         variant = variants[item['variant'].id]   
         price = Decimal(str(item['price']))       
         qty = item['quantity']                    
-        subtotal = price * qty                    
-        total += subtotal                         
+        line_subtotal = price * qty                    
+        order_subtotal += line_subtotal                        
 
         # 只存 media 路徑字串（如 'products/tshirt_red.jpg'），不複製實體檔案
         # 若商品未來換圖，歷史訂單仍會顯示結帳當時的圖片路徑
@@ -93,7 +97,7 @@ def place_order(user, cart, shipping_data, payment_data):
             image_alt=image_alt,                  
             price=price,                          
             quantity=qty,                         
-            subtotal=subtotal,                    
+            subtotal=line_subtotal,                    
         )
 
         # ---- 扣減庫存 ----
@@ -101,22 +105,41 @@ def place_order(user, cart, shipping_data, payment_data):
         # update_fields=['stock']：只更新 stock 欄位
         variant.save(update_fields=['stock'])
 
-    # 這是安全設計的核心 —— 敏感資料在 forms.get_payment_data() 階段就已被丟棄
+    profile, _ = UserProfile.objects.get_or_create(user=user)
+
+    shipping_fee = Decimal('0.00')
+    tax = Decimal('0.00')
+    discount_amount = Decimal('0.00')
+    subtotal = order_subtotal
+    order_total = subtotal + shipping_fee + tax - discount_amount
+    
+    earned_points = int(order_subtotal)
+    profile.points += earned_points
+    profile.save(update_fields=['points'])
+    order.subtotal = subtotal
+    order.tax = tax
+    order.discount_amount = discount_amount
+    order.shipping_fee = shipping_fee
+    order.total = order_total       
+    order.status = 'paid'        
+    order.save(update_fields=[
+        'subtotal', 'shipping_fee', 'tax', 'discount_amount','status', 'total']) 
+
+    if payment_data.get('card_last_four') == DECLINED_CARD_LAST_FOUR:
+        raise PaymentDeclinedError('Card declined by issuer.')
+
     Payment.objects.create(
         order=order,                                              
         method=payment_data.get('method', 'credit_card'),         
         status='success',                                         
-        amount=total,                                             
+        amount=order_total,                                             
         card_last_four=payment_data.get('card_last_four', ''),    
         transaction_id=f"TXN-{uuid.uuid4().hex[:10].upper()}",    
         paid_at=timezone.now(),                                   
     )
-    profile, _ = UserProfile.objects.get_or_create(user=user)
 
-    earned_points = int(total)
-    profile.points += earned_points
-    profile.save(update_fields=['points'])
-    order.total = total          
-    order.status = 'paid'        
-    order.save(update_fields=['status', 'total'])  
+    db_cart = DBCart.objects.filter(user=user).first()
+    if db_cart is not None:
+        db_cart.items.all().delete()
+
     return order                 

@@ -1,10 +1,13 @@
 import json
+from loguru import logger
 from django.http import JsonResponse
 from django.middleware.csrf import get_token
 from django.contrib.auth import authenticate, login, logout
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
+
+from carts.services import merge_session_cart_into_db
 
 def csrf_view(request):
     get_token(request)
@@ -30,11 +33,16 @@ def api_login(request):
     user = authenticate(request, username=username, password=password)
     if user is None:
         return JsonResponse({'detail': 'Invalid credentials'}, status=401)
+    
+    try:
+        merge_session_cart_into_db(request, user)
+    except Exception:
+        logger.exception(f'Failed to merge session cart for user {user.username}')
 
     login(request, user)
     return JsonResponse({
         'id': user.id,
-        'username' : user.username,
+        'username': user.username,
     })
 
 def api_logout(request):
